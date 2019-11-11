@@ -12,9 +12,8 @@ const CredentialWrapper = styled.div`
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	flex: 1;
-	/* width: 100%; */
-	/* height: 100%; */
+	height: 100vh;
+
 	> * {
 		max-width: 400px;
 		flex: 1;
@@ -30,6 +29,7 @@ const SpacedInputs = styled.div`
 const ButtonWrapper = styled.div`
 	margin-top: 15px;
 	width: 100px;
+	margin-left: auto;
 `;
 
 interface CredentialProps {
@@ -43,6 +43,8 @@ const Credential: React.FunctionComponent<CredentialProps> = ({ onSubmit }) => {
 	const [bucket, setBucket] = useState('');
 
 	const onSaveClick = () => {
+		// Shouldn't really blindly trust the user input
+		// TODO need validation and a feedback loop
 		setItem(credentialsKey, { region, accessKeyId, secretAccessKey });
 		onSubmit();
 	}
