@@ -45,7 +45,7 @@ const Credential: React.FunctionComponent<CredentialProps> = ({ onSubmit }) => {
 	const onSaveClick = () => {
 		// Shouldn't really blindly trust the user input
 		// TODO need validation and a feedback loop
-		setItem(credentialsKey, { region, accessKeyId, secretAccessKey });
+		setItem(credentialsKey, { region, accessKeyId, secretAccessKey, bucket });
 		onSubmit();
 	}
 
