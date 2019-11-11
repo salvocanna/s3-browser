@@ -14,17 +14,16 @@ const initialCredentials = getItem<AWSConfig>(credentialsKey);
 const App: React.FunctionComponent = () => {
 	const [cred, setCred] = useState(initialCredentials);
 	const builtClient = useMemo(() => {
-		if (!cred)
-			return;
-
-		console.warn("creating new client");
-
-		return Client(cred);
+		if (cred)
+			return Client(cred);
 	}, [cred]);
 
 	const reloadConfig = () => {
 		const newCred = getItem(credentialsKey);
 
+		// We should really just trust the callback
+		// TODO remove deep comparison (kind of.. stringify isn't
+		// really the best way tbh)
 		if (JSON.stringify(newCred) !== JSON.stringify(cred))
 			setCred(newCred);
 	}
