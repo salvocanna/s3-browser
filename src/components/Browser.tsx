@@ -3,6 +3,7 @@ import { faFile, faFolder } from '@fortawesome/free-solid-svg-icons'
 
 import Breadcrumb from './Breadcrumb';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Heading from '@kiwicom/orbit-components/lib/Heading';
 import { ObjectList } from 'aws-sdk/clients/s3';
 import React from 'react';
 import styled from 'styled-components';
@@ -69,7 +70,7 @@ const renderContents = (list: ObjectList, prefix: string) => {
 		return (
 			<TableRow>
 				<TableCell align={'left'}>
-					{'Empty folder'}
+					<Heading type={'title5'}>{'Empty folder'}</Heading>
 				</TableCell>
 			</TableRow>
 		);
