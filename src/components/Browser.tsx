@@ -1,9 +1,24 @@
 import Table, { TableBody, TableCell, TableHead, TableRow } from '@kiwicom/orbit-components/lib/Table';
+import { faFile, faFolder } from '@fortawesome/free-solid-svg-icons'
 
 import Breadcrumb from './Breadcrumb';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react';
+import styled from 'styled-components';
 import useListObjects from '../hooks/list-objects';
 
+const Element = styled.div`
+	cursor: pointer;
+
+	> * {
+		display: inline-block;
+	}
+
+	> div:first-child {
+		width: 12px;
+		margin-right: 8px;
+	}
+`;
 const Browser: React.FunctionComponent = () => {
 	const [list, path, setPath] = useListObjects('');
 
@@ -25,17 +40,23 @@ const Browser: React.FunctionComponent = () => {
 					</TableHead>
 					<TableBody>
 						{list.response.CommonPrefixes.map(i => (
-							<TableRow>
+							<TableRow key={i.Prefix}>
 								<TableCell align={'left'}>
-									<span onClick={() => setPath(i.Prefix)}>
-										Folder: {i.Prefix}
-									</span>
+									<Element onClick={() => setPath(i.Prefix)}>
+										<div><FontAwesomeIcon icon={faFolder} /></div>
+										<div>{i.Prefix}</div>
+									</Element>
 								</TableCell>
 							</TableRow>
 						))}
 						{list.response.Contents.map(i => (
 							<TableRow>
-								<TableCell align={'left'}>Item: {i.Key}</TableCell>
+								<TableCell align={'left'}>
+									<Element>
+										<div><FontAwesomeIcon icon={faFile} /></div>
+										<div>{i.Key}</div>
+									</Element>
+								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
