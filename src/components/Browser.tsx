@@ -1,3 +1,5 @@
+import Table, { TableBody, TableCell, TableHead, TableRow } from '@kiwicom/orbit-components/lib/Table';
+
 import Breadcrumb from './Breadcrumb';
 import React from 'react';
 import useListObjects from '../hooks/list-objects';
@@ -15,14 +17,29 @@ const Browser: React.FunctionComponent = () => {
 			)}
 
 			{list.response && (
-				<div>
-					{list.response.Contents.map(i => (
-						<div>Item: {i.Key}</div>
-					))}
-					{list.response.CommonPrefixes.map(i => (
-						<div onClick={() => setPath(i.Prefix)}>Item: {i.Prefix}</div>
-					))}
-				</div>
+				<Table>
+					<TableHead>
+						<TableRow>
+							<TableCell align={'left'}>{'Path'}</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{list.response.CommonPrefixes.map(i => (
+							<TableRow>
+								<TableCell align={'left'}>
+									<span onClick={() => setPath(i.Prefix)}>
+										Folder: {i.Prefix}
+									</span>
+								</TableCell>
+							</TableRow>
+						))}
+						{list.response.Contents.map(i => (
+							<TableRow>
+								<TableCell align={'left'}>Item: {i.Key}</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
 			)}
 		</div>
 	);

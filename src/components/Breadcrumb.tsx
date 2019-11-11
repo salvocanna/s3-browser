@@ -1,3 +1,5 @@
+import Breadcrumbs, { BreadcrumbsItem } from '@kiwicom/orbit-components/lib/Breadcrumbs';
+
 import React from 'react';
 import { getBreadcrumbItems } from '../helpers/breadcrumb';
 
@@ -10,13 +12,17 @@ const Breadcrumb: React.FunctionComponent<BreadcrumbProps> = ({ path, onPathChan
 	const items = getBreadcrumbItems(path);
 
 	return (
-		<div>
+		<Breadcrumbs>
 			{items.map((item, i) => (
-				<span key={`${item.path}:${i}`} onClick={() => onPathChange(item.path)}>
-					{item.displayName}{' / '}
-				</span>
+				<BreadcrumbsItem
+					key={`${item.path}:${i}`}
+					onClick={() => onPathChange(item.path)}
+					href={'#'}
+				>
+					{item.displayName}
+				</BreadcrumbsItem>
 			))}
-		</div>
+		</Breadcrumbs>
 	);
 };
 
