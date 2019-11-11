@@ -1,3 +1,5 @@
+import 'typeface-roboto';
+
 import Client, { AWSConfig } from './client';
 import React, { useMemo, useState } from 'react';
 

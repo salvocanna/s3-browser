@@ -1,26 +1,39 @@
-import React, { useContext, useState } from 'react';
+import Card, { CardHeader, CardSection, CardSectionHeader } from '@kiwicom/orbit-components/lib/Card';
+import React, { ChangeEvent, useContext, useState } from 'react';
 
+import Button from '@kiwicom/orbit-components/lib/Button';
+import InputField from "@kiwicom/orbit-components/lib/InputField";
 import { credentialsKey } from '../constants/local-storage';
 import { setItem } from '../helpers/local-storage';
 import styled from 'styled-components';
 
-const Form = styled.div`
-	margin: 20px;
-`;
-
-const Input = styled.input`
-	width: 150px;
-	display: block;
-
-	& + & {
-		margin-top: 20px;
+const CredentialWrapper = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	/* width: 100%; */
+	/* height: 100%; */
+	> * {
+		max-width: 400px;
+		flex: 1;
 	}
 `;
 
-const SaveButton = styled.button``;
+const SpacedInputs = styled.div`
+	> * + * {
+		margin-top: 10px;
+	}
+`;
+
+const ButtonWrapper = styled.div`
+	margin-top: 15px;
+	width: 100px;
+`;
 
 interface CredentialProps {
- 	onSubmit: () => void;
+	onSubmit: () => void;
 }
 
 const Credential: React.FunctionComponent<CredentialProps> = ({ onSubmit }) => {
@@ -35,31 +48,50 @@ const Credential: React.FunctionComponent<CredentialProps> = ({ onSubmit }) => {
 	}
 
 	return (
-		<div>
-			<div>{'Credential form here'}</div>
-			<Form>
-				<Input
-					value={region}
-					onChange={e => setRegion(e.target.value)}
+		<CredentialWrapper>
+			<Card>
+				<CardHeader
+					title={'AWS S3 Credentials'}
+					subTitle={'* Credentials are stored in your local storage'}
 				/>
-				<Input
-					value={accessKeyId}
-					onChange={e => setAccessKeyId(e.target.value)}
-				/>
-				<Input
-					value={secretAccessKey}
-					onChange={e => setSecretAccessKey(e.target.value)}
-				/>
-				<Input
-					value={bucket}
-					onChange={e => setBucket(e.target.value)}
-				/>
+				<CardSection>
+					<SpacedInputs>
+						<InputField
+							label={'Access Key'}
+							placeholder={'AKIA...'}
+							size={'small'}
+							value={accessKeyId}
+							onChange={(e: ChangeEvent<HTMLInputElement>) => setAccessKeyId(e.target.value)}
+						/>
+						<InputField
+							label={'Secret'}
+							size={'small'}
+							value={secretAccessKey}
+							onChange={(e: ChangeEvent<HTMLInputElement>) => setSecretAccessKey(e.target.value)}
+						/>
+						<InputField
+							label={'Bucket'}
+							size={'small'}
+							value={bucket}
+							onChange={(e: ChangeEvent<HTMLInputElement>) => setBucket(e.target.value)}
+						/>
+						<InputField
+							label={'Region'}
+							size={'small'}
+							value={region}
+							onChange={(e: ChangeEvent<HTMLInputElement>) => setRegion(e.target.value)}
+						/>
 
-				<SaveButton
-					onClick={onSaveClick}
-				/>
-			</Form>
-		</div>
+						<ButtonWrapper>
+							<Button onClick={onSaveClick} fullWidth>
+								{'Save'}
+							</Button>
+						</ButtonWrapper>
+					</SpacedInputs>
+
+				</CardSection>
+			</Card>
+		</CredentialWrapper>
 	);
 };
 
