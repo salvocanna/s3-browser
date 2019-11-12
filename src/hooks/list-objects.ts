@@ -24,7 +24,6 @@ const useListObjects = (initialPath: string, initialData: State<S3.ListObjectsOu
 				const result = await ctxClient.listObjects({
 					MaxKeys: 300,
 					Delimiter: '/',
-					// Marker: '/',
 					Prefix: path,
 				});
 
@@ -41,7 +40,7 @@ const useListObjects = (initialPath: string, initialData: State<S3.ListObjectsOu
 		fetchData();
 
 		return () => { cancelled = true; };
-	}, [path]);
+	}, [path, ctxClient]);
 
 	return <const>[state, path, setPath];
 };
