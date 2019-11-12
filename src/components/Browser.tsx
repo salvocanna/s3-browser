@@ -1,3 +1,4 @@
+import { ObjectStorageClassDescription, humanizeBytes } from '../helpers/file';
 import Table, { TableBody, TableCell, TableHead, TableRow } from '@kiwicom/orbit-components/lib/Table';
 import { faFile, faFolder } from '@fortawesome/free-solid-svg-icons'
 
@@ -6,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Heading from '@kiwicom/orbit-components/lib/Heading';
 import { ObjectList } from 'aws-sdk/clients/s3';
 import React from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
 import useListObjects from '../hooks/list-objects';
 
@@ -40,6 +42,9 @@ const Browser: React.FunctionComponent = () => {
 					<TableHead>
 						<TableRow>
 							<TableCell align={'left'}>{'Path'}</TableCell>
+							<TableCell align={'left'}>{'Last modified'}</TableCell>
+							<TableCell align={'left'}>{'Size'}</TableCell>
+							<TableCell align={'left'}>{'Storage'}</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -52,6 +57,9 @@ const Browser: React.FunctionComponent = () => {
 										<div>{i.Prefix}</div>
 									</Element>
 								</TableCell>
+								<TableCell align={'left'}>{'--'}</TableCell>
+								<TableCell align={'left'}>{'--'}</TableCell>
+								<TableCell align={'left'}>{'--'}</TableCell>
 							</TableRow>
 						))}
 
@@ -68,22 +76,28 @@ const renderContents = (list: ObjectList, prefix: string) => {
 
 	if (!filteredList.length) {
 		return (
-			<TableRow>
+			<TableRow key={'-'}>
 				<TableCell align={'left'}>
 					<Heading type={'title5'}>{'Empty folder'}</Heading>
 				</TableCell>
+				<TableCell align={'left'}>{'--'}</TableCell>
+				<TableCell align={'left'}>{'--'}</TableCell>
+				<TableCell align={'left'}>{'--'}</TableCell>
 			</TableRow>
 		);
 	}
 
 	return filteredList.map(i => (
-		<TableRow>
+		<TableRow key={i.Key}>
 			<TableCell align={'left'}>
 				<Element>
 					<div><FontAwesomeIcon icon={faFile} /></div>
 					<div>{i.Key}</div>
 				</Element>
 			</TableCell>
+			<TableCell align={'left'}>{moment(i.LastModified).format('dddd, MMMM Do YYYY, h:mm:ss a')}</TableCell>
+			<TableCell align={'left'}>{humanizeBytes(i.Size)}</TableCell>
+			<TableCell align={'left'}>{ObjectStorageClassDescription[i.StorageClass]}</TableCell>
 		</TableRow>
 	));
 }
