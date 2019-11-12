@@ -6,6 +6,7 @@ import React, { useMemo, useState } from 'react';
 import Browser from './components/Browser';
 import ClientContext from './contexts/client';
 import Credential from './components/Credential';
+import UploadButton from './components/UploadButton';
 import { credentialsKey } from './constants/local-storage';
 import { getItem } from './helpers/local-storage';
 
@@ -33,6 +34,7 @@ const App: React.FunctionComponent = () => {
 
 	return (
 		<ClientContext.Provider value={builtClient}>
+			<UploadButton />
 			<Browser />
 
 			<div onClick={reloadConfig}>Reload config</div>
