@@ -18,88 +18,148 @@ interface EnrichedFile {
 	file: File;
 }
 
+interface FileState {
+	completed: boolean;
+	progress: number;
+	working: boolean;
+	error: Error | string;
+}
+
 interface PutObjectsState {
 	files: EnrichedFile[];
-	pending: EnrichedFile[];
-	next: EnrichedFile | void;
-	uploading: boolean;
-	uploaded: EnrichedFile[];
-	status: 'IDLE' | 'LOADED' | 'INIT' | 'PENDING' | 'COMPLETED' | 'UPLOAD_ERROR';
-	uploadError: unknown;
+	filesState: Record<string, FileState>;
+	pending: string[];
+	next: string | void;
+	working: boolean;
+	error: Error | string;
+	status: 'idle' | 'loaded' | 'init' | 'pending' | 'completed' | 'error';
 }
 
 const initialState: PutObjectsState = {
 	files: [],
+	filesState: {},
 	pending: [],
-	next: null,
-	uploading: false,
-	uploaded: [],
-	status: 'IDLE',
-	uploadError: void 0,
+	next: void 0,
+	working: false,
+	error: void 0,
+	// todo: review if this is actually needed for convenience or can be inferred
+	status: 'idle',
 };
 
 export type PutObjectAction =
 	| { type: 'load', files: EnrichedFile[] }
-	| { type: 'submit' }
-	| { type: 'next', next: EnrichedFile | void }
-	| { type: 'file-uploaded', pending: EnrichedFile[], prev: EnrichedFile }
+	| { type: 'submit', fileIds?: string[] }
+	| { type: 'next', next: string | void }
+	| { type: 'progress', fileId: string, state: Partial<FileState> }
+	| { type: 'uploaded', pending: string[], prev: string }
 	| { type: 'completed' }
-	| { type: 'set-upload-error', error: any }
+	| { type: 'dang!', error: Error | string }
 ;
 
 const reducer = (state: PutObjectsState, action: PutObjectAction): PutObjectsState => {
 	switch (action.type) {
 		case 'load':
-			return { ...state, files: action.files, status: 'LOADED' }
+			return {
+				...state,
+				files: action.files,
+				status: 'loaded',
+				filesState: {
+					...state.filesState,
+					...action.files.reduce((prevValue, currValue) => ({
+						...prevValue,
+						[currValue.fileId]: {
+							completed: false,
+							progress: 0,
+							working: false,
+							error: void 0,
+						} as FileState,
+					}), {}),
+				},
+			};
+
 		case 'submit':
-			return { ...state, uploading: true, pending: state.files, status: 'INIT' }
+			return {
+				...state,
+				working: true,
+				pending: action.fileIds ? [...state.pending, ...action.fileIds] : state.files.map(f => f.fileId),
+				status: 'init',
+			};
+
 		case 'next':
 			return {
 				...state,
 				next: action.next,
-				status: 'PENDING',
-			}
-		case 'file-uploaded':
+				status: 'pending',
+			};
+
+		case 'progress':
+			return {
+				...state,
+				filesState: {
+					...state.filesState,
+					[action.fileId]: {
+						// yeah spread it! 😏
+						...state.filesState[action.fileId],
+						...action.state,
+					},
+				},
+			};
+
+		// When a single file is completed
+		case 'uploaded':
 			return {
 				...state,
 				next: null,
 				pending: action.pending,
-				uploaded: [ ...state.uploaded, action.prev ],
-			}
+			};
+
+		// When all files are completed
 		case 'completed':
-			return { ...state, uploading: false, status: 'COMPLETED' }
-		case 'set-upload-error':
-			return { ...state, uploadError: action.error, status: 'UPLOAD_ERROR' }
+			return {
+				...state,
+				working: false,
+				status: 'completed',
+			};
+
+		case 'dang!':
+			return {
+				...state,
+				error: action.error,
+				status: 'error',
+			};
+
 		default:
-			return state
+			return state;
 	}
 };
 
-const useFileHandlers = () => {
-	const [state, dispatch] = useReducer(reducer, initialState)
+const usePutObjects = () => {
+	const [state, dispatch] = useReducer(reducer, initialState);
 
 	const onSubmit = useCallback((e: FormEvent) => {
 		e.preventDefault();
 
 		if (state.files.length)
 			dispatch({ type: 'submit' });
-		else // LOLs
-			window.alert("You don't have any files loaded.");
+		else
+			dispatch({ type: 'dang!', error: 'no_files_selected' });
 	}, [state.files.length]);
 
 	const onChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files.length) {
 			const arrFiles = Array.from(e.target.files);
 
-			const files = arrFiles.map((file, index) => {
-				const src = window.URL.createObjectURL(file)
+			const files = arrFiles.map((file, index) => ({
+				fileId: `${index}${(new Date()).getTime()}`,
+				file,
+			}));
 
-				return { file, fileId: String(index), src };
+			dispatch({
+				type: 'load',
+				files,
 			});
-
-			dispatch({ type: 'load', files })
 		}
-	}
+	};
 
 	// Sets the next file when it detects that its ready to go
 	useEffect(() => {
@@ -122,25 +182,25 @@ const useFileHandlers = () => {
 
 					const pending = state.pending.slice(1);
 
-					dispatch({ type: 'file-uploaded', prev, pending })
+					dispatch({ type: 'uploaded', prev, pending })
 				})
 				.catch((error) => {
-					console.error('.catch((error) => {', error);
-
-					dispatch({ type: 'set-upload-error', error })
+					dispatch({ type: 'dang!', error })
 				});
 		}
 	}, [state]);
 
 	// Ends the upload process
 	useEffect(() => {
-		if (!state.pending.length && state.uploading) {
-			dispatch({ type: 'completed' })
+		if (!state.pending.length && state.working) {
+			dispatch({
+				type: 'completed',
+			})
 		}
-	}, [state.pending.length, state.uploading]);
+	}, [state.pending.length, state.working]);
 
 	return {
-		...state,
+		state,
 		onSubmit,
 		onChange,
 	}
