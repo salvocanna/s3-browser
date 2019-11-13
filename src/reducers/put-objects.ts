@@ -46,7 +46,7 @@ const putObjectsReducer = (state: PutObjectsState, action: PutObjectAction): Put
 		case 'load':
 			return {
 				...state,
-				files: action.files,
+				files: [...state.files, ...action.files],
 				status: 'loaded',
 				filesState: {
 					...state.filesState,
