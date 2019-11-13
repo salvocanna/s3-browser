@@ -9,7 +9,7 @@ import { ObjectList } from 'aws-sdk/clients/s3';
 import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
-import useListObjects from '../hooks/list-objects';
+import useListObjects from '../hooks/use-list-objects';
 
 const Element = styled.div`
 	cursor: pointer;
