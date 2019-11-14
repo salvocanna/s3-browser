@@ -8,10 +8,10 @@ const type = 'file';
 // This is (an) interesting (bug)
 // Need to specify 2 interfaces, the first being what you could be providing as props
 // and the second one has to match what's the return.
-// and it works fine - throwing an error - if `const type` is a number`
+// and it works fine - throwing an error - if `const type` is number
 // Fun thing, it works anyway with
 // const FileInput = styled.input.attrs<HTMLInputElement>({ type })
-// but `const type` could literally be anything
+// but `const type` could literally be any type
 export const HiddenFileInput = styled.input.attrs<any, Pick<HTMLInputElement, 'type'>>({ type })`
 	display: none;
 `;
@@ -26,7 +26,7 @@ export type FileInputProps = WithOnlyRequired<InputHTMLAttributes<HTMLInputEleme
 // click and onChange in the real input
 export const withFileInput = <P extends object>
 	(Component: React.ComponentType<P>): React.FunctionComponent<Omit<P, 'onChange'> & FileInputProps> =>
-	({ onChange,...props }: FileInputProps) => {
+	({ onChange, ...props }: FileInputProps) => {
 		const ref = useRef<HTMLInputElement>(void 0);
 
 		return (
@@ -39,5 +39,16 @@ export const withFileInput = <P extends object>
 			</React.Fragment>
 		)
 	};
+
+// Note to (unfortunately short-memory) self on usage for future ref
+// ==> As react component: (nb: must proxy over `onClick` in some jsx element)
+// const NiceButtonAsComponent: React.FunctionComponent<{ label: string; }> =
+// 	({ label, onClick }) => ( <div onClick={onClick}>{label}</div> );
+// const EnhancedComponent = withFileInput(NiceButtonAsComponent);
+// <EnhancedComponent multiple onChange={...} label={'Select files'} />
+// ==> As styled component: (no need to proxy it, styled component is like DOM)
+// const NiceButtonAsStyled = styled.div`font-size: 20px;`;
+// const EnhancedStyled = withFileInput(NiceButtonAsStyled);
+// <EnhancedStyled multiple onChange={...}>{'Select files'}</EnhancedStyled>
 
 export default HiddenFileInput;
