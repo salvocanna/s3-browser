@@ -1,4 +1,4 @@
-import { FileInputComponentProps, withFileInput } from '../atoms/Input';
+import { FileInputProps, withFileInput } from '../atoms/Input';
 import React, { useState } from 'react';
 
 import styled from 'styled-components';
@@ -25,12 +25,12 @@ const Dubugger = styled.div`
 `;
 
 
-interface NiceButtonComponentProps extends FileInputComponentProps {
+interface NiceButtonComponentProps extends FileInputProps {
 	label: string;
 }
 
-const NiceButtonComponent: React.FunctionComponent<NiceButtonComponentProps> = ({ label }) => (
-	<div>{`Hello m8: (${label})`}</div>
+const NiceButtonComponent: React.FunctionComponent<NiceButtonComponentProps> = ({ label, onClick }) => (
+	<div onClick={onClick}>{`Hello m8: (${label})`}</div>
 );
 
 const NiceButtonStyled = styled.div`padding: 30px; font-size: 20px; color: red;`;

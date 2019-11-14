@@ -12,7 +12,6 @@ const type = 'file';
 // Fun thing, it works anyway with
 // const FileInput = styled.input.attrs<HTMLInputElement>({ type })
 // but `const type` could literally be anything
-
 export const HiddenFileInput = styled.input.attrs<any, Pick<HTMLInputElement, 'type'>>({ type })`
 	display: none;
 `;
@@ -35,12 +34,7 @@ export const withFileInput = <P extends object>
 				<HiddenFileInput onChange={onChange} ref={ref} />
 				<Component
 					{...props as P}
-					onClick={() => {
-
-						// onClick={() => ref.current && ref.current.click()}
-						console.log('Component onClick', ref.current);
-
-					}}
+					onClick={() => ref.current && ref.current.click())}
 				/>
 			</React.Fragment>
 		)
