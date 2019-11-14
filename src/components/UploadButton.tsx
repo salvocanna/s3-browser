@@ -8,11 +8,6 @@ const ButtonWrapper = styled.div`
 	margin: 20px;
 `;
 
-// const Button = styled.input.attrs(() => ({ type: 'file' }))`
-// 	padding: 20px;
-// 	font-size: 1.3rem;
-// `;
-
 const Dubugger = styled.div`
 	width: 300px;
 	height: 300px;
@@ -24,19 +19,17 @@ const Dubugger = styled.div`
 	z-index: 9;
 `;
 
-
-interface NiceButtonComponentProps extends FileInputProps {
-	label: string;
-}
-
-const NiceButtonComponent: React.FunctionComponent<NiceButtonComponentProps> = ({ label, onClick }) => (
-	<div onClick={onClick}>{`Hello m8: (${label})`}</div>
+const NiceButtonStyled = withFileInput(
+	styled.div`
+		cursor: pointer;
+		padding: 10px 20px;
+		border-radius: 8px;
+		background: white;
+		box-shadow: 8px 4px 15px 4px rgba(8, 8, 8, 0.08);
+		font-size: 16px;
+		display: inline-block;
+	`
 );
-
-const NiceButtonStyled = styled.div`padding: 30px; font-size: 20px; color: red;`;
-
-const TestComponent = withFileInput(NiceButtonComponent);
-const TestStyled = withFileInput(NiceButtonStyled);
 
 interface UploadButtonProps {
 	currentPath?: string
@@ -63,24 +56,14 @@ const UploadButton: React.FunctionComponent<UploadButtonProps> = ({ currentPath 
 
 			<form onSubmit={onSubmit}>
 				<div>
-
-					<TestComponent
+					<NiceButtonStyled
 						multiple
 						onChange={onChange}
-						label={'Label goes here'}
-					/>
-
-					<TestStyled
-						multiple
-						onChange={onChange}
-						// onClick
-					>{'CLICK ME'}</TestStyled>
-
-					{/* <input
-						type="file"
-						multiple
-						onChange={onChange}
-					/> */}
+					>
+						{'Upload some files'}
+					</NiceButtonStyled>
+				</div>
+				<div>
 					<button type="submit">Submit</button>
 				</div>
 				<div>
