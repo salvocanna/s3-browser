@@ -3,7 +3,7 @@ import React, { HTMLAttributes, InputHTMLAttributes, useRef } from 'react';
 import { WithOnlyRequired } from '../helpers/typed';
 import styled from 'styled-components';
 
-const type = 'input';
+const type = 'file';
 
 // This is (an) interesting (bug)
 // Need to specify 2 interfaces, the first being what you could be providing as props
@@ -21,8 +21,7 @@ export const HiddenFileInput = styled.input.attrs<any, Pick<HTMLInputElement, 't
 // These are the props that we define as mandatory, that we will intercept
 // preventing them from reaching the wrapped component and pass down instead
 // to our hidden input tag
-type FileInputProps = WithOnlyRequired<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'onClick'>;
-export type FileInputComponentProps = WithOnlyRequired<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'onClick'>;
+export type FileInputProps = WithOnlyRequired<InputHTMLAttributes<HTMLInputElement>, 'onChange'>;
 
 // This HOC will allow us to render a very nice button while still triggering the
 // click and onChange in the real input
