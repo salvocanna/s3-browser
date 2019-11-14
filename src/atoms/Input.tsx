@@ -26,12 +26,16 @@ export type FileInputProps = WithOnlyRequired<InputHTMLAttributes<HTMLInputEleme
 // click and onChange in the real input
 export const withFileInput = <P extends object>
 	(Component: React.ComponentType<P>): React.FunctionComponent<Omit<P, 'onChange'> & FileInputProps> =>
-	({ onChange, ...props }: FileInputProps) => {
+	({ onChange, multiple, ...props }: FileInputProps) => {
 		const ref = useRef<HTMLInputElement>(void 0);
 
 		return (
 			<React.Fragment>
-				<HiddenFileInput onChange={onChange} ref={ref} />
+				<HiddenFileInput
+					multiple={multiple}
+					onChange={onChange}
+					ref={ref}
+				/>
 				<Component
 					{...props as P}
 					onClick={() => ref.current && ref.current.click()}
