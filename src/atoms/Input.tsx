@@ -34,7 +34,7 @@ export const withFileInput = <P extends object>
 				<HiddenFileInput onChange={onChange} ref={ref} />
 				<Component
 					{...props as P}
-					onClick={() => ref.current && ref.current.click())}
+					onClick={() => ref.current && ref.current.click()}
 				/>
 			</React.Fragment>
 		)
