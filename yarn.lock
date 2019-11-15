@@ -1292,26 +1292,6 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@kiwicom/js@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@kiwicom/js/-/js-0.9.0.tgz#67032574d8ee318cd747001a7b4c87013214327a"
-  integrity sha512-CwDiWwLWE0iWzCrL08x7jdEySAIVdmcmF/rik8gjK5oW4jA5G9fOBxsSSVm2bLtq8HG9KIz4YHDbtWO1K7LIiQ==
-
-"@kiwicom/orbit-components@^0.67.0":
-  version "0.67.0"
-  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-components/-/orbit-components-0.67.0.tgz#19a86043fadd65395fe5d63908885aa47e95ef2b"
-  integrity sha512-rv1ybWKnJ2KQZSZ5KbGz2IAWtCqWQJJesARW71rxpTwGcmI+mKmtwvFc7FNOqoSccC16sDJEfWXJ3fO2NqJ4vw==
-  dependencies:
-    "@kiwicom/js" "^0.9.0"
-    "@kiwicom/orbit-design-tokens" "~0.8.0"
-
-"@kiwicom/orbit-design-tokens@~0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-design-tokens/-/orbit-design-tokens-0.8.0.tgz#7eaa0d90fb40701131e1dad1091591d1e77f8490"
-  integrity sha512-Vm6XLg0lnEM5aFYPPvsXQG9/o2G8iElgmz93q8r8XZ/wwRDjEhRonVqp7WdX7KbxAgpGCjH28bBz7+71PZLSJw==
-  dependencies:
-    ramda "^0.26.1"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -8576,11 +8556,6 @@ raf@3.4.1:
   integrity sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==
   dependencies:
     performance-now "^2.1.0"
-
-ramda@^0.26.1:
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
-  integrity sha512-hLWjpy7EnsDBb0p+Z3B7rPi3GDeRG5ZtiI33kJhTt+ORCd38AbAIjB/9zRIUoeTbE/AVX5ZkU7m6bznsvrf8eQ==
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.1.0"
