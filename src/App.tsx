@@ -4,9 +4,10 @@ import Client, { AWSConfig } from './client';
 import React, { useMemo, useState } from 'react';
 
 import Browser from './components/Browser';
+import { Button } from '@blueprintjs/core';
 import ClientContext from './contexts/client';
 import Credential from './components/Credential';
-import UploadButton from './components/UploadButton';
+import Upload from './components/Upload';
 import { credentialsKey } from './constants/local-storage';
 import { getItem } from './helpers/local-storage';
 
@@ -34,10 +35,15 @@ const App: React.FunctionComponent = () => {
 
 	return (
 		<ClientContext.Provider value={builtClient}>
-			<UploadButton />
-			<Browser />
+			<div className={'container-fluid'}>
+				<span>{'Upload area'}</span>
+				<Upload />
+			</div>
+			<div className={'container-fluid'}>
+				{/* <Button onClick={reloadConfig}>{'Reload config'}</Button> */}
+				<Browser />
+			</div>
 
-			<div onClick={reloadConfig}>Reload config</div>
 		</ClientContext.Provider>
 	);
 };
