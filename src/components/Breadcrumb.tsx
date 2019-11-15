@@ -1,30 +1,24 @@
-import Breadcrumbs, { BreadcrumbsItem } from '@kiwicom/orbit-components/lib/Breadcrumbs';
+import { BreadcrumbItem, getBreadcrumbItems } from '../helpers/breadcrumb';
+import { Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
 
 import React from 'react';
-import { getBreadcrumbItems } from '../helpers/breadcrumb';
+
+type PathChangeCallback = (path: string) => void;
 
 interface BreadcrumbProps {
 	path: string;
-	onPathChange: (path: string) => void;
+	onPathChange: PathChangeCallback;
 }
 
-const Breadcrumb: React.FunctionComponent<BreadcrumbProps> = ({ path, onPathChange }) => {
-	const items = getBreadcrumbItems(path);
+const map = (item: BreadcrumbItem, onPathChange: PathChangeCallback): IBreadcrumbProps => ({
+	text: item.displayName,
+	onClick: () => onPathChange(item.path),
+});
 
-	return (
-		<Breadcrumbs>
-			{items.map((item, i) => (
-				<BreadcrumbsItem
-					key={`${item.path}:${i}`}
-					onClick={() => onPathChange(item.path)}
-					href={'#'}
-				>
-					{item.displayName}
-				</BreadcrumbsItem>
-			))}
-		</Breadcrumbs>
-	);
-};
-
+const Breadcrumb: React.FunctionComponent<BreadcrumbProps> = ({ path, onPathChange }) => (
+	<Breadcrumbs
+		items={getBreadcrumbItems(path).map(i => map(i, onPathChange))}
+	/>
+);
 
 export default Breadcrumb;
