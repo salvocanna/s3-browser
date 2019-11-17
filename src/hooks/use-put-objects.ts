@@ -1,9 +1,9 @@
+import { AWSError, S3 } from 'aws-sdk';
 import { ChangeEvent, FormEvent, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import putObjectsReducer, { getInitialState } from '../reducers/put-objects';
 
 import { Client } from '../client';
 import ClientContext from '../contexts/client';
-import { S3 } from 'aws-sdk';
 
 const fakeApi = {
 	uploadFile: ({ timeout = 550 }) =>
@@ -18,6 +18,7 @@ const initialState = getInitialState();
 
 const usePutObjects = () => {
 	const [state, dispatch] = useReducer(putObjectsReducer, initialState);
+	const ctxClient = useContext<Client>(ClientContext);
 
 	const onSubmit = useCallback((e: FormEvent) => {
 		e.preventDefault();
@@ -49,26 +50,37 @@ const usePutObjects = () => {
 		if (state.pending.length && state.next == null) {
 			const next = state.pending[0];
 
-			dispatch({ type: 'next', next })
+			dispatch({ type: 'next', next });
 		}
 	}, [state.next, state.pending]);
 
 	// Process the next pending thumbnail when ready
 	useEffect(() => {
 		if (state.pending.length && state.next) {
-			const { next } = state
-			fakeApi
-				// .uploadFile(next)
-				.uploadFile({ timeout: Math.floor(Math.random() * 5000) })
-				.then(() => {
-					const prev = next;
+			const { next } = state;
+			const nextFile = state.files.find(f => f.fileId === next);
 
+			// booooo
+			if (!nextFile)
+				throw new Error('file_not_found_in_state');
+
+			ctxClient.putObject({
+				Key: `${nextFile.file.name}:${(new Date).getTime()}`,
+				Body: nextFile.file,
+				ACL: 'private',
+				onProgress: (progress: any) => {
+					console.log('progress', progress);
+					// console.log(Math.round(progress.loaded / progress.total * 100) + '% done');
+				},
+			})
+				.then((value: S3.PutObjectOutput) => {
+					const prev = next;
 					const pending = state.pending.slice(1);
 
-					dispatch({ type: 'uploaded', prev, pending })
-				})
-				.catch((error) => {
-					dispatch({ type: 'dang!', error })
+					dispatch({ type: 'uploaded', prev, pending });
+
+				}).catch((error: AWSError) => {
+					dispatch({ type: 'dang!', error });
 				});
 		}
 	}, [state]);
@@ -78,7 +90,7 @@ const usePutObjects = () => {
 		if (!state.pending.length && state.working) {
 			dispatch({
 				type: 'completed',
-			})
+			});
 		}
 	}, [state.pending.length, state.working]);
 
