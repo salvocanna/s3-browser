@@ -1,23 +1,17 @@
-import { Button, Card, Elevation } from '@blueprintjs/core';
-import { FileInputProps, withFileInput } from '../atoms/Input';
+import { Button, Card, Collapse, Elevation } from '@blueprintjs/core';
 import React, { useState } from 'react';
 
 import styled from 'styled-components';
 import usePutObjects from '../hooks/use-put-objects';
+import { withFileInput } from '../atoms/Input';
 
 const ButtonWrapper = styled.div`
 	margin: 20px 0;
 `;
 
-const Dubugger = styled.div`
-	width: 300px;
-	height: 300px;
-	position: absolute;
-	right: 40px;
-	top: 40px;
-	background: white;
+const Dubugger = styled.pre`
+	height: 400px;
 	overflow: scroll;
-	z-index: 9;
 `;
 
 const NiceButtonStyled = withFileInput(Button);
@@ -32,6 +26,7 @@ const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => 
 		onSubmit,
 		onChange,
 	} = usePutObjects();
+	const [debug, setDebug] = useState(false);
 
 	return (
 		<ButtonWrapper>
@@ -42,9 +37,19 @@ const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => 
 					</div>
 				)}
 
-				<Dubugger>
-					<pre>{JSON.stringify(state, undefined, 2)}</pre>
-				</Dubugger>
+				<Button icon={'repeat'} onClick={() => setDebug(!debug)}>
+					{'Debug: upload state'}
+				</Button>
+
+				<Collapse isOpen={debug}>
+					<Dubugger>
+						{JSON.stringify(state, undefined, 2)}
+					</Dubugger>
+				</Collapse>
+
+
+					<pre></pre>
+
 
 				<form onSubmit={onSubmit}>
 					<div>
