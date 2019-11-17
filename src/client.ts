@@ -42,9 +42,7 @@ const getClient = (config: AWSConfig): Client => {
 
 					return resolve(data);
 				})
-					.on('httpUploadProgress', function (progress: any) {
-						onProgress(progress);
-					});
+					.on('httpUploadProgress', onProgress);
 		}),
 	}
 };
