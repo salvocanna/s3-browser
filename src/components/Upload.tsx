@@ -23,19 +23,15 @@ interface UploadButtonProps {
 const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => {
 	const {
 		state,
-		onSubmit,
-		onChange,
+		submit,
+		addFiles,
 	} = usePutObjects();
 	const [debug, setDebug] = useState(false);
 
 	return (
 		<ButtonWrapper>
 			<Card elevation={Elevation.ONE}>
-				{state.status === 'completed' && (
-					<div>
-						<h2>Done!</h2>
-					</div>
-				)}
+				<pre>{state.status}</pre>
 
 				<Button icon={'repeat'} onClick={() => setDebug(!debug)}>
 					{'Debug: upload state'}
@@ -51,11 +47,14 @@ const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => 
 					<pre></pre>
 
 
-				<form onSubmit={onSubmit}>
+				<form onSubmit={e => {
+					e.preventDefault();
+					submit();
+				}}>
 					<div>
 						<NiceButtonStyled
 							multiple
-							onChange={onChange}
+							onChange={e => addFiles(Array.from(e.target.files))}
 						>
 							{'Upload some files'}
 						</NiceButtonStyled>

@@ -1,6 +1,6 @@
 import { AWSError, S3 } from 'aws-sdk';
-import { ChangeEvent, FormEvent, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import putObjectsReducer, { FileState, getInitialState } from '../reducers/put-objects';
+import { useCallback, useContext, useEffect, useReducer } from 'react';
 
 import { Client } from '../client';
 import ClientContext from '../contexts/client';
@@ -21,29 +21,23 @@ const usePutObjects = () => {
 	const [state, dispatch] = useReducer(putObjectsReducer, initialState);
 	const ctxClient = useContext<Client>(ClientContext);
 
-	const onSubmit = useCallback((e: FormEvent) => {
-		e.preventDefault();
-
+	const submit = useCallback(() => {
 		if (state.files.length)
-			dispatch({ type: 'submit' });
-		else
-			dispatch({ type: 'dang!', error: 'no_files_selected' });
+			return dispatch({ type: 'submit' });
+
+		dispatch({ type: 'dang!', error: 'no_files_selected' });
 	}, [state.files.length]);
 
-	const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files.length) {
-			const arrFiles = Array.from(e.target.files);
+	const addFiles = (files: File[]) => {
+		const mappedFiles = files.map((file, index) => ({
+			fileId: `${index}${(new Date()).getTime()}`,
+			file,
+		}));
 
-			const files = arrFiles.map((file, index) => ({
-				fileId: `${index}${(new Date()).getTime()}`,
-				file,
-			}));
-
-			dispatch({
-				type: 'load',
-				files,
-			});
-		}
+		dispatch({
+			type: 'load',
+			files: mappedFiles,
+		});
 	};
 
 	// Sets the next file when it detects that its ready to go
@@ -55,63 +49,64 @@ const usePutObjects = () => {
 		}
 	}, [state.next, state.pending]);
 
-	// Process the next pending thumbnail when ready
+	// Process the next pending file when ready
 	useEffect(() => {
-		if (state.pending.length && state.next) {
-			const { next } = state;
-			const nextFile = state.files.find(f => f.fileId === next);
+		if (!state.pending.length || !state.next || state.working)
+			return;
 
-			// booooo
-			if (!nextFile)
-				throw new Error('file_not_found_in_state');
+		const { next } = state;
+		const nextFile = state.files.find(f => f.fileId === next);
 
-			ctxClient.putObject({
-				Key: `${nextFile.file.name}:${(new Date).getTime()}`,
-				Body: nextFile.file,
-				ACL: 'private',
-				onProgress: (progress: Progress) => {
-					const percentage = Math.round(progress.loaded / progress.total * 100);
-					const completed = progress.loaded === progress.total;
+		// booooo
+		if (!nextFile)
+			throw new Error('file_not_found_in_state');
 
-					console.log(nextFile.fileId, percentage + '% done');
+		dispatch({
+			type: 'init-upload',
+			fileId: nextFile.fileId,
+		});
 
-					const state: FileState = {
-						completed,
-						working: !completed,
-						progress: percentage,
-						error: void 0,
-					};
+		ctxClient.putObject({
+			Key: `${nextFile.file.name}:${(new Date).getTime()}`,
+			Body: nextFile.file,
+			ACL: 'private',
+			onProgress: (progress: Progress) => {
+				const percentage = Math.round(progress.loaded / progress.total * 100);
+				const completed = progress.loaded === progress.total;
 
-					dispatch({
-						type: 'progress',
-						fileId: nextFile.fileId,
-						state,
-					});
-				},
-			})
-				.then((value: S3.PutObjectOutput) => {
-					const pending = state.pending.slice(1);
+				const state: FileState = {
+					completed,
+					working: !completed,
+					progress: percentage,
+					error: void 0,
+				};
 
-					dispatch({ type: 'uploaded', fileId: nextFile.fileId, pending });
-				}).catch((error: AWSError) => {
-					dispatch({ type: 'dang!', error });
+				dispatch({
+					type: 'progress',
+					fileId: nextFile.fileId,
+					state,
 				});
-		}
+			},
+		})
+			.then((value: S3.PutObjectOutput) => {
+				const pending = state.pending.slice(1);
+
+				dispatch({ type: 'uploaded', fileId: nextFile.fileId, pending });
+			}).catch((error: AWSError) => {
+				dispatch({ type: 'dang!', error });
+			});
 	}, [state]);
 
 	// Ends the upload process
 	useEffect(() => {
-		if (!state.pending.length && state.working) {
-			dispatch({
-				type: 'completed',
-			});
-		}
-	}, [state.pending.length, state.working]);
+		if (!state.pending.length && !state.next && !state.working)
+			dispatch({ type: 'idle' });
+	}, [state.pending.length, state.next, state.working]);
 
 	return {
 		state,
-		onSubmit,
-		onChange,
+		submit,
+		addFiles,
 	}
 }
 
