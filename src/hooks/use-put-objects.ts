@@ -53,7 +53,7 @@ const usePutObjects = () => {
 		}
 	}, [state.next, state.pending]);
 
-	// Processes the next pending thumbnail when ready
+	// Process the next pending thumbnail when ready
 	useEffect(() => {
 		if (state.pending.length && state.next) {
 			const { next } = state
