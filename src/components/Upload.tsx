@@ -60,16 +60,21 @@ const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => 
 							{'Upload some files'}
 						</NiceButtonStyled>
 					</div>
+
 					<div>
-						<button type="submit">Submit</button>
+						<Button type={'submit'} disabled={!state.files.length}>{'Do upload!'}</Button>
 					</div>
-					<div>
-						{state.files.map(({ file, fileId }) => (
-							<div key={`thumb${fileId}`} >
-								<div >{file.name}</div>
-							</div>
-						))}
-					</div>
+
+					{state.files.length > 0 && (
+						<div>
+							<div>{'Selected files:'}</div>
+							{state.files.map(({ file, fileId }) => (
+								<div key={`thumb${fileId}`} >
+									<div >{file.name}</div>
+								</div>
+							))}
+						</div>
+					)}
 				</form>
 			</Card>
 		</ButtonWrapper>
