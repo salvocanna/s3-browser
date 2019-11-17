@@ -10,8 +10,13 @@ import Credential from './components/Credential';
 import Upload from './components/Upload';
 import { credentialsKey } from './constants/local-storage';
 import { getItem } from './helpers/local-storage';
+import styled from 'styled-components';
 
 const initialCredentials = getItem<AWSConfig>(credentialsKey);
+
+const DebugArea = styled.div`
+	margin: 20px;
+`;
 
 const App: React.FunctionComponent = () => {
 	const [cred, setCred] = useState(initialCredentials);
@@ -23,11 +28,7 @@ const App: React.FunctionComponent = () => {
 	const reloadConfig = () => {
 		const newCred = getItem(credentialsKey);
 
-		// We should really just trust the callback
-		// TODO remove deep comparison (kind of.. stringify isn't
-		// really the best way tbh)
-		if (JSON.stringify(newCred) !== JSON.stringify(cred))
-			setCred(newCred);
+		setCred(newCred);
 	}
 
 	if (!builtClient)
@@ -40,10 +41,17 @@ const App: React.FunctionComponent = () => {
 				<Upload />
 			</div>
 			<div className={'container-fluid'}>
-				{/* <Button onClick={reloadConfig}>{'Reload config'}</Button> */}
 				<Browser />
 			</div>
 
+			<DebugArea>
+				<Button
+					onClick={reloadConfig}
+					icon={'refresh'}
+				>
+					{'Debug: reload config'}
+				</Button>
+			</DebugArea>
 		</ClientContext.Provider>
 	);
 };
