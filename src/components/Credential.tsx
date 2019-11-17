@@ -1,8 +1,6 @@
-import Card, { CardHeader, CardSection, CardSectionHeader } from '@kiwicom/orbit-components/lib/Card';
+import { Button, Card, Elevation, FormGroup, H4, HTMLTable, InputGroup, Text } from "@blueprintjs/core";
 import React, { ChangeEvent, useContext, useState } from 'react';
 
-import Button from '@kiwicom/orbit-components/lib/Button';
-import InputField from "@kiwicom/orbit-components/lib/InputField";
 import { credentialsKey } from '../constants/local-storage';
 import { setItem } from '../helpers/local-storage';
 import styled from 'styled-components';
@@ -21,6 +19,8 @@ const CredentialWrapper = styled.div`
 `;
 
 const SpacedInputs = styled.div`
+	margin-top: 20px;
+
 	> * + * {
 		margin-top: 10px;
 	}
@@ -28,7 +28,7 @@ const SpacedInputs = styled.div`
 
 const ButtonWrapper = styled.div`
 	margin-top: 15px;
-	width: 100px;
+	width: 80px;
 	margin-left: auto;
 `;
 
@@ -51,47 +51,58 @@ const Credential: React.FunctionComponent<CredentialProps> = ({ onSubmit }) => {
 
 	return (
 		<CredentialWrapper>
-			<Card>
-				<CardHeader
-					title={'AWS S3 Credentials'}
-					subTitle={'* Credentials are stored in your local storage'}
-				/>
-				<CardSection>
-					<SpacedInputs>
-						<InputField
-							label={'Access Key'}
+			<Card elevation={Elevation.ONE}>
+				<H4>{'AWS S3 Credentials'}</H4>
+				<Text>{'* Credentials are stored in your local storage'}</Text>
+
+				<SpacedInputs>
+					<FormGroup
+						label={'Access Key'}
+						labelInfo="(required)"
+					>
+						<InputGroup
 							placeholder={'AKIA...'}
-							size={'small'}
 							value={accessKeyId}
 							onChange={(e: ChangeEvent<HTMLInputElement>) => setAccessKeyId(e.target.value)}
 						/>
-						<InputField
-							label={'Secret'}
-							size={'small'}
+					</FormGroup>
+
+					<FormGroup
+						label={'Secret'}
+						labelInfo="(required)"
+					>
+						<InputGroup
 							value={secretAccessKey}
 							onChange={(e: ChangeEvent<HTMLInputElement>) => setSecretAccessKey(e.target.value)}
 						/>
-						<InputField
-							label={'Bucket'}
-							size={'small'}
+					</FormGroup>
+
+					<FormGroup
+						label={'Bucket'}
+						labelInfo="(required)"
+					>
+						<InputGroup
 							value={bucket}
 							onChange={(e: ChangeEvent<HTMLInputElement>) => setBucket(e.target.value)}
 						/>
-						<InputField
-							label={'Region'}
-							size={'small'}
+					</FormGroup>
+
+					<FormGroup label={'Region'}>
+						<InputGroup
 							value={region}
 							onChange={(e: ChangeEvent<HTMLInputElement>) => setRegion(e.target.value)}
 						/>
+					</FormGroup>
 
-						<ButtonWrapper>
-							<Button onClick={onSaveClick} fullWidth>
-								{'Save'}
-							</Button>
-						</ButtonWrapper>
-					</SpacedInputs>
-
-				</CardSection>
+					<ButtonWrapper>
+						<Button
+							onClick={onSaveClick}
+							intent={'primary'}
+							text={'Save'}
+							fill
+						/>
+					</ButtonWrapper>
+				</SpacedInputs>
 			</Card>
 		</CredentialWrapper>
 	);
