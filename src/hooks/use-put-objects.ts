@@ -1,9 +1,10 @@
 import { AWSError, S3 } from 'aws-sdk';
 import { ChangeEvent, FormEvent, useCallback, useContext, useEffect, useReducer, useState } from 'react';
-import putObjectsReducer, { getInitialState } from '../reducers/put-objects';
+import putObjectsReducer, { FileState, getInitialState } from '../reducers/put-objects';
 
 import { Client } from '../client';
 import ClientContext from '../contexts/client';
+import { Progress } from 'aws-sdk/lib/request';
 
 const fakeApi = {
 	uploadFile: ({ timeout = 550 }) =>
@@ -68,17 +69,30 @@ const usePutObjects = () => {
 				Key: `${nextFile.file.name}:${(new Date).getTime()}`,
 				Body: nextFile.file,
 				ACL: 'private',
-				onProgress: (progress: any) => {
-					console.log('progress', progress);
-					// console.log(Math.round(progress.loaded / progress.total * 100) + '% done');
+				onProgress: (progress: Progress) => {
+					const percentage = Math.round(progress.loaded / progress.total * 100);
+					const completed = progress.loaded === progress.total;
+
+					console.log(nextFile.fileId, percentage + '% done');
+
+					const state: FileState = {
+						completed,
+						working: !completed,
+						progress: percentage,
+						error: void 0,
+					};
+
+					dispatch({
+						type: 'progress',
+						fileId: nextFile.fileId,
+						state,
+					});
 				},
 			})
 				.then((value: S3.PutObjectOutput) => {
-					const prev = next;
 					const pending = state.pending.slice(1);
 
-					dispatch({ type: 'uploaded', prev, pending });
-
+					dispatch({ type: 'uploaded', fileId: nextFile.fileId, pending });
 				}).catch((error: AWSError) => {
 					dispatch({ type: 'dang!', error });
 				});

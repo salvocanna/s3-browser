@@ -36,7 +36,7 @@ export type PutObjectAction =
 	| { type: 'submit', fileIds?: string[] }
 	| { type: 'next', next: string | void }
 	| { type: 'progress', fileId: string, state: Partial<FileState> }
-	| { type: 'uploaded', pending: string[], prev: string }
+	| { type: 'uploaded', pending: string[], fileId: string }
 	| { type: 'completed' }
 	| { type: 'dang!', error: Error | string }
 ;
