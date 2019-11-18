@@ -47,7 +47,7 @@ const Browser: React.FunctionComponent = () => {
 		<Card elevation={Elevation.ONE}>
 			<Breadcrumb path={path} onPathChange={setPath} />
 
-			<HTMLTable>
+			<HTMLTable interactive bordered striped>
 				<thead>
 					<tr>
 						<th>{'Path'}</th>
