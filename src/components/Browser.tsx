@@ -25,6 +25,14 @@ const Element = styled.div`
 	}
 `;
 
+const UnpaddedCard = styled(Card)`
+	padding: 0;
+`;
+
+const DefaultCardPaddding = styled.div`
+	padding: 6px 12px;
+`;
+
 const formatEntries = ({ response }: State<S3.ListObjectsOutput, unknown>) => {
 	if (!response)
 		return { folders: [], files: [] };
@@ -44,8 +52,10 @@ const Browser: React.FunctionComponent = () => {
 	const entries = formatEntries(list);
 
 	return (
-		<Card elevation={Elevation.ONE}>
-			<Breadcrumb path={path} onPathChange={setPath} />
+		<UnpaddedCard elevation={Elevation.ONE}>
+			<DefaultCardPaddding>
+				<Breadcrumb path={path} onPathChange={setPath} />
+			</DefaultCardPaddding>
 
 			<HTMLTable interactive bordered striped>
 				<thead>
@@ -96,7 +106,7 @@ const Browser: React.FunctionComponent = () => {
 					))}
 				</tbody>
 			</HTMLTable>
-		</Card>
+		</UnpaddedCard>
 
 	);
 };

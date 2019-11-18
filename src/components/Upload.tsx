@@ -10,13 +10,8 @@ const ButtonWrapper = styled.div`
 	margin: 20px 0;
 `;
 
-const Dubugger = styled.pre`
-	height: 400px;
-	overflow: scroll;
-`;
-
 const UploadForm = styled.form`
-	> * {
+	> * + * {
 		margin-left: 10px;
 	}
 `;
@@ -29,7 +24,6 @@ const Upload: React.FunctionComponent = () => {
 		submit,
 		addFiles,
 	} = usePutObjects();
-	const [debug, setDebug] = useState(false);
 	const toaster = useContext<IToaster>(toasterContext);
 
 	useEffect(() => {
@@ -47,10 +41,10 @@ const Upload: React.FunctionComponent = () => {
 				<div>
 					{file.file.name}
 					<ProgressBar
-						intent={fileState.progress < 99 ? 'primary' : 'success'}
+						intent={fileState.completed ? 'success' : 'primary'}
 						value={fileState.progress / 100}
 						animate
-						stripes
+						stripes={!fileState.completed}
 					/>
 				</div>
 			),
@@ -66,16 +60,6 @@ const Upload: React.FunctionComponent = () => {
 	return (
 		<ButtonWrapper>
 			<Card elevation={Elevation.ONE}>
-				{/* <Button icon={'repeat'} onClick={() => setDebug(!debug)}>
-					{'Debug: upload state'}
-				</Button>
-				<Collapse isOpen={debug}>
-					<Dubugger>
-						{JSON.stringify(state, undefined, 2)}
-					</Dubugger>
-				</Collapse>
-				 */}
-
 				<UploadForm onSubmit={handleOnSubmit}>
 
 					<NiceButtonStyled
@@ -91,7 +75,7 @@ const Upload: React.FunctionComponent = () => {
 
 				</UploadForm>
 
-				{state.files.length > 0 && (
+				{/* {state.files.length > 0 && (
 					<div>
 						<div>{'Selected files:'}</div>
 						{state.files.map(({ file, fileId }) => (
@@ -100,7 +84,7 @@ const Upload: React.FunctionComponent = () => {
 							</div>
 						))}
 					</div>
-				)}
+				)} */}
 			</Card>
 		</ButtonWrapper>
 	);
