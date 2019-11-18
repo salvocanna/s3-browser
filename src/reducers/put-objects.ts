@@ -73,7 +73,6 @@ const putObjectsReducer = (state: PutObjectsState, action: PutObjectAction): Put
 		case 'submit':
 			return {
 				...state,
-				// working: ,
 				pending: action.fileIds ? [...state.pending, ...action.fileIds] : state.files.map(f => f.fileId),
 				status: 'init',
 			};
