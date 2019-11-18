@@ -1,22 +1,25 @@
 import 'typeface-roboto';
 
+import { Button, Toaster } from '@blueprintjs/core';
 import Client, { AWSConfig } from './client';
 import React, { useMemo, useState } from 'react';
 
 import Browser from './components/Browser';
-import { Button } from '@blueprintjs/core';
-import ClientContext from './contexts/client';
 import Credential from './components/Credential';
 import Upload from './components/Upload';
+import clientContext from './contexts/client';
 import { credentialsKey } from './constants/local-storage';
 import { getItem } from './helpers/local-storage';
 import styled from 'styled-components';
+import toasterContext from './contexts/toaster';
 
 const initialCredentials = getItem<AWSConfig>(credentialsKey);
 
 const DebugArea = styled.div`
 	margin: 20px;
 `;
+
+const toaster = Toaster.create({ position: 'top' });
 
 const App: React.FunctionComponent = () => {
 	const [cred, setCred] = useState(initialCredentials);
@@ -25,28 +28,28 @@ const App: React.FunctionComponent = () => {
 			return Client(cred);
 	}, [cred]);
 
+
+	// TODO: have a look how to optimise this
 	const reloadConfig = () => {
 		const newCred = getItem(credentialsKey);
 
 		setCred(newCred);
-	}
+	};
 
 	if (!builtClient)
 		return <Credential onSubmit={reloadConfig} />;
 
 	return compose(
 		[
-			[ClientContext, builtClient],
+			[clientContext, builtClient],
+			[toasterContext, toaster],
 		],
 		<div className={'container-fluid'}>
 			<span>{'Upload area'}</span>
 			<Upload />
 			<Browser />
 			<DebugArea>
-				<Button
-					onClick={reloadConfig}
-					icon={'refresh'}
-				>
+				<Button onClick={reloadConfig} icon={'refresh'}>
 					{'Debug: reload config'}
 				</Button>
 			</DebugArea>
