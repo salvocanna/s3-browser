@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import styled from 'styled-components';
 import usePutObjects from '../hooks/use-put-objects';
-import { withFileInput } from '../atoms/Input';
+import withFileInput from '../hocs/withFileInput';
 
 const ButtonWrapper = styled.div`
 	margin: 20px 0;
@@ -42,10 +42,6 @@ const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => 
 						{JSON.stringify(state, undefined, 2)}
 					</Dubugger>
 				</Collapse>
-
-
-					<pre></pre>
-
 
 				<form onSubmit={e => {
 					e.preventDefault();
