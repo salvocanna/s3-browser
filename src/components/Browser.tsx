@@ -40,7 +40,6 @@ const formatEntries = ({ response }: State<S3.ListObjectsOutput, unknown>) => {
 	if (!response)
 		return { folders: [], files: [] };
 
-
 	const { Prefix, CommonPrefixes, Contents } = response;
 
 	return {
@@ -55,21 +54,28 @@ const getSignedUrl = (client: Client, Key: string, Expires = 60 * 60 * 24) =>
 		Expires: 60 * 60 * 24,
 	});
 
+const oneHour = 60 * 60;
 const EntryItem: React.FunctionComponent<{item: S3.Object }> = ({ item }) => {
 	const client = useContext<Client>(clientContext);
 
-	const handleContextMenu =  (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => {
+	const handleContextMenu = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => {
+		const position = { left: e.clientX, top: e.clientY };
 		e.preventDefault();
 
 		ContextMenu.show(
 			<Menu>
 				<MenuItem
 					icon={'clipboard'}
-					text={'Copy pre signed URL'}
-					onClick={() => getSignedUrl(client, item.Key).then(copy)}
+					text={'Copy pre-signed URL (1h)'}
+					onClick={() => getSignedUrl(client, item.Key, oneHour * 24).then(copy)}
+				/>
+				<MenuItem
+					icon={'clipboard'}
+					text={'Copy pre-signed URL (24h)'}
+					onClick={() => getSignedUrl(client, item.Key, oneHour).then(copy)}
 				/>
 			</Menu>,
-			{ left: e.clientX, top: e.clientY },
+			position,
 			() => console.log('Just opened the context menu dude!', item),
 		);
 	};
