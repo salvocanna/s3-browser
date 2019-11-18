@@ -1,4 +1,4 @@
-import { Button, Card, Collapse, Elevation, IToaster, Toaster } from '@blueprintjs/core';
+import { Button, Card, Collapse, Elevation, IToaster, ProgressBar, Toaster } from '@blueprintjs/core';
 import React, { useContext, useEffect, useState } from 'react';
 
 import styled from 'styled-components';
@@ -17,11 +17,7 @@ const Dubugger = styled.pre`
 
 const NiceButtonStyled = withFileInput(Button);
 
-interface UploadButtonProps {
-	currentPath?: string
-}
-
-const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => {
+const Upload: React.FunctionComponent = () => {
 	const {
 		state,
 		submit,
@@ -31,10 +27,29 @@ const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => 
 	const toaster = useContext<IToaster>(toasterContext);
 
 	useEffect(() => {
-		const uploading = state.status;
-		toaster.show({ message: <div>{uploading}</div> }, 'state');
+		if (state.working === void 0)
+			return;
 
-		return () => toaster.dismiss('state');
+		const file = state.files.find(f => f.fileId === state.working);
+		const fileState = state.filesState[state.working];
+
+		if (!file || !fileState) return;
+
+		toaster.show({
+			icon: 'cloud-upload',
+			message: (
+				<div>
+					{file.file.name}
+					<ProgressBar
+						intent={fileState.progress < 99 ? 'primary' : 'success'}
+						value={fileState.progress / 100}
+						animate
+						stripes
+					/>
+				</div>
+			),
+			timeout: !fileState.completed ? 0 : 2000,
+		}, 'uploading');
 	}, [state]);
 
 	return (
