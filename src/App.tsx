@@ -45,9 +45,9 @@ const App: React.FunctionComponent = () => {
 			[toasterContext, toaster],
 		],
 		<div className={'container-fluid'}>
-			<span>{'Upload area'}</span>
 			<Upload />
 			<Browser />
+
 			<DebugArea>
 				<Button onClick={reloadConfig} icon={'refresh'}>
 					{'Debug: reload config'}
