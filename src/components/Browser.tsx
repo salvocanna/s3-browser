@@ -1,17 +1,12 @@
-import { Button, Card, ContextMenu, Elevation, HTMLTable, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
-import { ObjectStorageClassDescription, humanizeBytes } from '../helpers/file';
-import React, { useContext } from 'react';
-import { faFile, faFolder } from '@fortawesome/free-solid-svg-icons'
+import { Card, Elevation, HTMLTable } from "@blueprintjs/core";
 
 import Breadcrumb from './Breadcrumb';
-import { Client } from '../client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import Heading from '@kiwicom/orbit-components/lib/Heading';
+import Item from './Item';
+import React from 'react';
 import S3 from 'aws-sdk/clients/s3';
 import { State } from '../reducers/fetcher';
-import clientContext from '../contexts/client';
-import copy from 'copy-to-clipboard';
-import moment from 'moment';
+import { faFolder } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
 import useListObjects from '../hooks/use-list-objects';
 
@@ -47,59 +42,6 @@ const formatEntries = ({ response }: State<S3.ListObjectsOutput, unknown>) => {
 		files: Contents.filter(c => c.Key !== Prefix),
 	};
 }
-
-const getSignedUrl = (client: Client, Key: string, Expires = 60 * 60 * 24) =>
-	client.getSignedUrl({
-		Key,
-		Expires: 60 * 60 * 24,
-	});
-
-const oneHour = 60 * 60;
-const EntryItem: React.FunctionComponent<{item: S3.Object }> = ({ item }) => {
-	const client = useContext<Client>(clientContext);
-
-	const handleContextMenu = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => {
-		const position = { left: e.clientX, top: e.clientY };
-		e.preventDefault();
-
-		ContextMenu.show(
-			<Menu>
-				<MenuItem
-					icon={'clipboard'}
-					text={'Copy pre-signed URL (1h)'}
-					onClick={() => getSignedUrl(client, item.Key, oneHour * 24).then(copy)}
-				/>
-				<MenuItem
-					icon={'clipboard'}
-					text={'Copy pre-signed URL (24h)'}
-					onClick={() => getSignedUrl(client, item.Key, oneHour).then(copy)}
-				/>
-			</Menu>,
-			position,
-			() => console.log('Just opened the context menu dude!', item),
-		);
-	};
-
-	return (
-		<tr onContextMenu={handleContextMenu}>
-			<td>
-				<Element>
-					<div>
-						<FontAwesomeIcon icon={faFile} />
-					</div>
-					<div>
-						{item.Key}
-					</div>
-				</Element>
-
-			</td>
-			<td>{moment(item.LastModified).format('dddd, MMMM Do YYYY, h:mm:ss a')}</td>
-			<td>{humanizeBytes(item.Size)}</td>
-			<td>{ObjectStorageClassDescription[item.StorageClass]}</td>
-		</tr>
-	);
-};
-
 
 const Browser: React.FunctionComponent = () => {
 	const [list, path, setPath] = useListObjects('');
@@ -140,7 +82,7 @@ const Browser: React.FunctionComponent = () => {
 
 					))}
 					{entries.files.map(item => (
-						<EntryItem item={item} />
+						<Item item={item} />
 					))}
 				</tbody>
 			</HTMLTable>
