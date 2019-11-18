@@ -1,9 +1,7 @@
-import React, { HTMLAttributes, InputHTMLAttributes, useRef } from 'react';
+import React, { InputHTMLAttributes, useRef } from 'react';
 
 import { WithOnlyRequired } from '../helpers/typed';
 import styled from 'styled-components';
-
-const type = 'file';
 
 // This is (an) interesting (bug)
 // Need to specify 2 interfaces, the first being what you could be providing as props
@@ -12,7 +10,7 @@ const type = 'file';
 // Fun thing, it works anyway with
 // const FileInput = styled.input.attrs<HTMLInputElement>({ type })
 // but `const type` could literally be any type
-export const HiddenFileInput = styled.input.attrs<any, Pick<HTMLInputElement, 'type'>>({ type })`
+export const HiddenFileInput = styled.input.attrs<any, Pick<HTMLInputElement, 'type'>>({ type: 'file' })`
 	display: none;
 `;
 
@@ -24,7 +22,7 @@ export type FileInputProps = WithOnlyRequired<InputHTMLAttributes<HTMLInputEleme
 
 // This HOC will allow us to render a very nice button while still triggering the
 // click and onChange in the real input
-export const withFileInput = <P extends object>
+const withFileInput = <P extends object>
 	(Component: React.ComponentType<P>): React.FunctionComponent<Omit<P, 'onChange'> & FileInputProps> =>
 	({ onChange, multiple, ...props }: FileInputProps) => {
 		const ref = useRef<HTMLInputElement>(void 0);
@@ -55,4 +53,4 @@ export const withFileInput = <P extends object>
 // const EnhancedStyled = withFileInput(NiceButtonAsStyled);
 // <EnhancedStyled multiple onChange={...}>{'Select files'}</EnhancedStyled>
 
-export default HiddenFileInput;
+export default withFileInput;
