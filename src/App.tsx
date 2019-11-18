@@ -34,16 +34,14 @@ const App: React.FunctionComponent = () => {
 	if (!builtClient)
 		return <Credential onSubmit={reloadConfig} />;
 
-	return (
-		<ClientContext.Provider value={builtClient}>
-			<div className={'container-fluid'}>
-				<span>{'Upload area'}</span>
-				<Upload />
-			</div>
-			<div className={'container-fluid'}>
-				<Browser />
-			</div>
-
+	return compose(
+		[
+			[ClientContext, builtClient],
+		],
+		<div className={'container-fluid'}>
+			<span>{'Upload area'}</span>
+			<Upload />
+			<Browser />
 			<DebugArea>
 				<Button
 					onClick={reloadConfig}
@@ -52,8 +50,13 @@ const App: React.FunctionComponent = () => {
 					{'Debug: reload config'}
 				</Button>
 			</DebugArea>
-		</ClientContext.Provider>
+		</div>
 	);
 };
+
+const compose = (contexts: [React.Context<any>, any][], children: React.ReactNode) =>
+	contexts.reduce((acc: any, [context, value]) => (
+		<context.Provider value={value}>{acc}</context.Provider>
+	), children);
 
 export default App;
