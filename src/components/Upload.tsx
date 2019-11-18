@@ -1,7 +1,8 @@
-import { Button, Card, Collapse, Elevation } from '@blueprintjs/core';
-import React, { useState } from 'react';
+import { Button, Card, Collapse, Elevation, IToaster, Toaster } from '@blueprintjs/core';
+import React, { useContext, useEffect, useState } from 'react';
 
 import styled from 'styled-components';
+import toasterContext from '../contexts/toaster';
 import usePutObjects from '../hooks/use-put-objects';
 import withFileInput from '../hocs/withFileInput';
 
@@ -27,6 +28,14 @@ const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => 
 		addFiles,
 	} = usePutObjects();
 	const [debug, setDebug] = useState(false);
+	const toaster = useContext<IToaster>(toasterContext);
+
+	useEffect(() => {
+		const uploading = state.status;
+		toaster.show({ message: <div>{uploading}</div> }, 'state');
+
+		return () => toaster.dismiss('state');
+	}, [state]);
 
 	return (
 		<ButtonWrapper>
@@ -50,7 +59,10 @@ const Upload: React.FunctionComponent<UploadButtonProps> = ({ currentPath }) => 
 					<div>
 						<NiceButtonStyled
 							multiple
-							onChange={e => addFiles(Array.from(e.target.files))}
+							onChange={e => {
+								addFiles(Array.from(e.target.files));
+
+							}}
 						>
 							{'Upload some files'}
 						</NiceButtonStyled>
