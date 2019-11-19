@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useRef } from 'react';
+import React, { InputHTMLAttributes, useCallback, useEffect, useState } from 'react';
 
 import { WithOnlyRequired } from '../helpers/typed';
 import styled from 'styled-components';
@@ -10,9 +10,12 @@ import styled from 'styled-components';
 // Fun thing, it works anyway with
 // const FileInput = styled.input.attrs<HTMLInputElement>({ type })
 // but `const type` could literally be any type
-export const HiddenFileInput = styled.input.attrs<any, Pick<HTMLInputElement, 'type'>>({ type: 'file' })`
+export const HiddenFileInput = styled.input.attrs<any, Pick<HTMLInputElement, 'type'>>({
+	type: 'file',
+})`
 	display: none;
 `;
+// webkitdirectory, mozdirectory, and directory
 
 // type PartialHTMLInputElement = Partial<HTMLInputElement>;
 // These are the props that we define as mandatory, that we will intercept
@@ -25,18 +28,27 @@ export type FileInputProps = WithOnlyRequired<InputHTMLAttributes<HTMLInputEleme
 const withFileInput = <P extends object>
 	(Component: React.ComponentType<P>): React.FunctionComponent<Omit<P, 'onChange'> & FileInputProps> =>
 	({ onChange, multiple, ...props }: FileInputProps) => {
-		const ref = useRef<HTMLInputElement>(void 0);
+		const [ref, setRef] = useState<HTMLInputElement>(void 0);
+		const inputCallback = useCallback(node => setRef(node), []);
+
+		useEffect(() => {
+			if (!ref || !multiple)
+				return;
+
+			// @ts-ignore
+			ref.directory = ref.webkitdirectory = true;
+		}, [ref]);
 
 		return (
 			<React.Fragment>
 				<HiddenFileInput
 					multiple={multiple}
 					onChange={onChange}
-					ref={ref}
+					ref={inputCallback}
 				/>
 				<Component
 					{...props as P}
-					onClick={() => ref.current && ref.current.click()}
+					onClick={() => ref && ref.click()}
 				/>
 			</React.Fragment>
 		)
