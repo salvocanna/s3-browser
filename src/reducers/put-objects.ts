@@ -1,7 +1,9 @@
-interface EnrichedFile {
+import { WebkitFile } from '../@types/webkit-file';
+
+interface WrappedFile {
 	fileId: string;
-	file: File;
-}
+	file: WebkitFile;
+};
 
 export interface FileState {
 	completed: boolean;
@@ -11,7 +13,7 @@ export interface FileState {
 }
 
 interface PutObjectsState {
-	files: EnrichedFile[];
+	files: WrappedFile[];
 	filesState: Record<string, FileState>;
 	pending: string[];
 	next: string;
@@ -33,7 +35,7 @@ export const getInitialState: () => PutObjectsState = () => ({
 
 export type PutObjectAction =
 	| { type: 'idle' }
-	| { type: 'load', files: EnrichedFile[] }
+	| { type: 'load', files: WrappedFile[] }
 	| { type: 'submit', fileIds?: string[] }
 	| { type: 'next', next: string }
 	| { type: 'init-upload', fileId: string }
@@ -43,7 +45,6 @@ export type PutObjectAction =
 ;
 
 const putObjectsReducer = (state: PutObjectsState, action: PutObjectAction): PutObjectsState => {
-	console.log(action.type, action, state);
 	switch (action.type) {
 		case 'idle':
 			return {

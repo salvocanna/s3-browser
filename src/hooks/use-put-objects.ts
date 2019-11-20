@@ -5,15 +5,7 @@ import { useCallback, useContext, useEffect, useReducer } from 'react';
 import { Client } from '../client';
 import ClientContext from '../contexts/client';
 import { Progress } from 'aws-sdk/lib/request';
-
-const fakeApi = {
-	uploadFile: ({ timeout = 550 }) =>
-		new Promise((resolve) => {
-			setTimeout(() => {
-				resolve();
-			}, timeout);
-		}),
-}
+import { WebkitFile } from '../@types/webkit-file';
 
 const initialState = getInitialState();
 
@@ -28,7 +20,7 @@ const usePutObjects = () => {
 		dispatch({ type: 'dang!', error: 'no_files_selected' });
 	}, [state.files.length]);
 
-	const addFiles = (files: File[]) => {
+	const addFiles = (files: WebkitFile[]) => {
 		const mappedFiles = files.map((file, index) => ({
 			fileId: `${index}${(new Date()).getTime()}`,
 			file,
