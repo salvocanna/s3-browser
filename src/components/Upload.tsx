@@ -39,7 +39,7 @@ const Upload: React.FunctionComponent = () => {
 			icon: 'cloud-upload',
 			message: (
 				<div>
-					{file.file.name}
+					<span>{file.file.name}</span>
 					<ProgressBar
 						intent={fileState.completed ? 'success' : 'primary'}
 						value={fileState.progress / 100}
@@ -63,11 +63,20 @@ const Upload: React.FunctionComponent = () => {
 				<UploadForm onSubmit={handleOnSubmit}>
 
 					<NiceButtonStyled
-						multiple
-						onChange={e => {
-							addFiles(Array.from(e.target.files));
+						onChange={e => addFiles(Array.from(e.target.files))}
+					>
+						{'Upload some files'}
+					</NiceButtonStyled>
 
-						}}
+					<NiceButtonStyled
+						mode={'multiple'}
+						onChange={e => addFiles(Array.from(e.target.files))}
+					>
+						{'Upload some files'}
+					</NiceButtonStyled>
+					<NiceButtonStyled
+						mode={'folder'}
+						onChange={e => addFiles(Array.from(e.target.files))}
 					>
 						{'Upload some files'}
 					</NiceButtonStyled>
