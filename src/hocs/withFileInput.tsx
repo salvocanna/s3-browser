@@ -15,34 +15,35 @@ export const HiddenFileInput = styled.input.attrs<any, Pick<HTMLInputElement, 't
 })`
 	display: none;
 `;
-// webkitdirectory, mozdirectory, and directory
 
 // type PartialHTMLInputElement = Partial<HTMLInputElement>;
 // These are the props that we define as mandatory, that we will intercept
 // preventing them from reaching the wrapped component and pass down instead
 // to our hidden input tag
-export type FileInputProps = WithOnlyRequired<InputHTMLAttributes<HTMLInputElement>, 'onChange'>;
+export interface FileInputProps extends WithOnlyRequired<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+	mode?: 'single' | 'multiple' | 'folder';
+}
 
 // This HOC will allow us to render a very nice button while still triggering the
 // click and onChange in the real input
 const withFileInput = <P extends object>
 	(Component: React.ComponentType<P>): React.FunctionComponent<Omit<P, 'onChange'> & FileInputProps> =>
-	({ onChange, multiple, ...props }: FileInputProps) => {
+	({ onChange, mode, ...props }: FileInputProps) => {
 		const [ref, setRef] = useState<HTMLInputElement>(void 0);
 		const inputCallback = useCallback(node => setRef(node), []);
 
 		useEffect(() => {
-			if (!ref || !multiple)
+			if (!ref || mode !== 'folder')
 				return;
 
 			// @ts-ignore
-			ref.directory = ref.webkitdirectory = true;
+			ref.directory = ref.mozdirectory = ref.webkitdirectory = true;
 		}, [ref]);
 
 		return (
 			<React.Fragment>
 				<HiddenFileInput
-					multiple={multiple}
+					multiple={mode === 'multiple'}
 					onChange={onChange}
 					ref={inputCallback}
 				/>
