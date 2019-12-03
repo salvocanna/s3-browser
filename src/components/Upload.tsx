@@ -65,7 +65,7 @@ const Upload: React.FunctionComponent = () => {
 					<NiceButtonStyled
 						onChange={e => addFiles(Array.from(e.target.files))}
 					>
-						{'Upload some files'}
+						{'Upload one file'}
 					</NiceButtonStyled>
 
 					<NiceButtonStyled
@@ -78,7 +78,7 @@ const Upload: React.FunctionComponent = () => {
 						mode={'folder'}
 						onChange={e => addFiles(Array.from(e.target.files))}
 					>
-						{'Upload some files'}
+						{'Upload a folder'}
 					</NiceButtonStyled>
 					<Button type={'submit'} disabled={!state.files.length}>{'Do upload!'}</Button>
 
