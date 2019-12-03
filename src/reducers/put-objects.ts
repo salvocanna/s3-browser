@@ -42,7 +42,9 @@ export type PutObjectAction =
 	| { type: 'progress', fileId: string, state: Partial<FileState> }
 	| { type: 'uploaded', pending: string[], fileId: string }
 	| { type: 'dang!', error: Error | string }
-;
+	;
+
+// todo: Note: filesState continuous deeply nested spreading is not great
 
 const putObjectsReducer = (state: PutObjectsState, action: PutObjectAction): PutObjectsState => {
 	switch (action.type) {
@@ -89,6 +91,13 @@ const putObjectsReducer = (state: PutObjectsState, action: PutObjectAction): Put
 			return {
 				...state,
 				working: action.fileId,
+				filesState: {
+					...state.filesState,
+					[action.fileId]: {
+						...state.filesState[action.fileId],
+						working: true,
+					},
+				},
 			};
 
 		case 'progress':
@@ -111,6 +120,14 @@ const putObjectsReducer = (state: PutObjectsState, action: PutObjectAction): Put
 				next: null,
 				working: void 0,
 				pending: action.pending,
+				filesState: {
+					...state.filesState,
+					[action.fileId]: {
+						...state.filesState[action.fileId],
+						working: false,
+						completed: state.filesState[action.fileId].progress === 1,
+					},
+				},
 			};
 
 		case 'dang!':

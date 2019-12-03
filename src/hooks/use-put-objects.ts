@@ -63,12 +63,10 @@ const usePutObjects = () => {
 			Body: nextFile.file,
 			ACL: 'private',
 			onProgress: (progress: Progress) => {
-				const percentage = Math.round(progress.loaded / progress.total * 100);
-				const completed = progress.loaded === progress.total;
+				const percentage = progress.loaded / progress.total;
+				// const completed = progress.loaded === progress.total;
 
-				const state: FileState = {
-					completed,
-					working: !completed,
+				const state: Partial<FileState> = {
 					progress: percentage,
 					error: void 0,
 				};
