@@ -44,12 +44,12 @@ const Item: React.FunctionComponent<{ item: S3.Object }> = ({ item }) => {
 				<MenuItem
 					icon={'clipboard'}
 					text={'Copy pre-signed URL (1h)'}
-					onClick={() => getSignedUrl(client, item.Key, oneHour * 24).then(copy)}
+					onClick={() => copy(getSignedUrl(client, item.Key, oneHour * 24))}
 				/>
 				<MenuItem
 					icon={'clipboard'}
 					text={'Copy pre-signed URL (24h)'}
-					onClick={() => getSignedUrl(client, item.Key, oneHour).then(copy)}
+					onClick={() => copy(getSignedUrl(client, item.Key, oneHour))}
 				/>
 			</Menu>,
 			position,
