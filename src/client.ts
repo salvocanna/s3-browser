@@ -23,6 +23,7 @@ interface PutObjectRequestPayload extends Omit<S3.PutObjectRequest, 'Bucket'> {
 export interface Client {
 	listObjects: (params: Omit<S3.ListObjectsV2Request, 'Bucket'>) => Promise<PromiseResult<S3.ListObjectsV2Output, AWSError>>;
 	putObject: (params: PutObjectRequestPayload) => Promise<S3.PutObjectOutput>;
+	deleteObjects: (params: Omit<S3.DeleteObjectsRequest, 'Bucket'>) => Promise<S3.DeleteObjectsOutput>;
 	getSignedUrl: (params: GetSignedUrlRequest) => string;
 }
 
@@ -52,6 +53,8 @@ const getClient = (config: AWSConfig): Client => {
 				})
 					.on('httpUploadProgress', onProgress);
 			}),
+		deleteObjects: (params: Omit<S3.DeleteObjectsRequest, 'Bucket'>) =>
+			s3Client.deleteObjects({ ...params, Bucket: config.bucket }).promise(),
 	};
 };
 
