@@ -11,16 +11,23 @@ const useDeleteObjects = () => {
 	const [state, dispatch] = useReducer(deleteObjectsReducer, initialState);
 	const ctxClient = useContext<Client>(ClientContext);
 
-	// const loadFromKey = useCallback(() => {
-	// 	dispatch({ type: 'init' });
-	// }, [path]);
-
 	// load => keys[]
 	// run
 	// next - batch
 	// batch - completed
 	// error
 	// done
+
+	const crawlAdd = (key: string) => {
+		// need to call crawler.
+	}
+
+	const addKey = (key: string, crawl: boolean) => {
+		if (!crawl)
+			dispatch({ type: 'load', key });
+		else
+			crawlAdd(key);
+	};
 
 	const addKeys = (keys: string[]) => {
 		dispatch({ type: 'load', keys });
