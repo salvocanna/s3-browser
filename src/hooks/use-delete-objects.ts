@@ -11,6 +11,22 @@ const useDeleteObjects = () => {
 	const [state, dispatch] = useReducer(deleteObjectsReducer, initialState);
 	const ctxClient = useContext<Client>(ClientContext);
 
+
+	// type: 'load',
+	// keys: result.Contents.map(k => k.Key)
+
+	// type: 'run'
+
+	// type: 'run'
+
+
+	keys =>  pending
+
+	dispatch({ type: 'completed' });
+
+	dispatch({ type: 'error', error });
+
+
 	// load => keys[]
 	// load-batch
 	// run
@@ -26,49 +42,36 @@ const useDeleteObjects = () => {
 		});
 
 		dispatch({
-			type: 'load-batch',
+			type: 'load',
 			keys: result.Contents.map(k => k.Key)
 		});
 	};
 
 	const addKey = (key: string, crawl = true) => {
 		if (!crawl)
-			dispatch({ type: 'load', key });
+			dispatch({ type: 'load', keys: [key] });
 		else
 			fetchAllKeys(key);
-	};
-
-	const addKeys = (keys: string[]) => {
-		dispatch({ type: 'load', keys });
 	};
 
 	const run = () => dispatch({ type: 'run' });
 
 	useEffect(() => {
-		if (state.pending.length && !state.next.length)
-			dispatch({ type: 'next-batch'});
-		else
-			dispatch({ type: 'done' });
-	}, [state.pending]);
-
-
-	// Sets the next file when it detects that its ready to go
-	useEffect(() => {
-		if (state.next.length) {
+		if (state.pending.length) {
 			ctxClient.deleteObjects({
 				Delete: {
-					Objects: state.next.map(Key => ({ Key })),
+					Objects: state.pending, // .map(Key => ({ Key })),
 				},
 			})
 				.then((value: S3.DeleteObjectsOutput) => {
 					console.log('Deleted: ', value.Deleted);
 
-					dispatch({ type: 'batch-completed' });
+					dispatch({ type: 'completed' });
 			}).catch((error: AWSError) => {
 				dispatch({ type: 'error', error });
 			});
 		}
-	}, [state.next]);
+	}, [state.pending]);
 
 	return {
 		state,
