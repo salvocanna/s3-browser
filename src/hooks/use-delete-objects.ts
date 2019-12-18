@@ -12,21 +12,30 @@ const useDeleteObjects = () => {
 	const ctxClient = useContext<Client>(ClientContext);
 
 	// load => keys[]
+	// load-batch
 	// run
 	// next - batch
 	// batch - completed
 	// error
 	// done
 
-	const crawlAdd = (key: string) => {
-		// need to call crawler.
-	}
+	const fetchAllKeys = async (Prefix: string) => {
+		const result = await ctxClient.listObjects({
+			MaxKeys: 1000, // Nice one. LOL
+			Prefix,
+		});
 
-	const addKey = (key: string, crawl: boolean) => {
+		dispatch({
+			type: 'load-batch',
+			keys: result.Contents.map(k => k.Key)
+		});
+	};
+
+	const addKey = (key: string, crawl = true) => {
 		if (!crawl)
 			dispatch({ type: 'load', key });
 		else
-			crawlAdd(key);
+			fetchAllKeys(key);
 	};
 
 	const addKeys = (keys: string[]) => {
