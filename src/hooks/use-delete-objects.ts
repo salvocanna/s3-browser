@@ -11,30 +11,6 @@ const useDeleteObjects = () => {
 	const [state, dispatch] = useReducer(deleteObjectsReducer, initialState);
 	const ctxClient = useContext<Client>(ClientContext);
 
-
-	// type: 'load',
-	// keys: result.Contents.map(k => k.Key)
-
-	// type: 'run'
-
-	// type: 'run'
-
-
-	keys =>  pending
-
-	dispatch({ type: 'completed' });
-
-	dispatch({ type: 'error', error });
-
-
-	// load => keys[]
-	// load-batch
-	// run
-	// next - batch
-	// batch - completed
-	// error
-	// done
-
 	const fetchAllKeys = async (Prefix: string) => {
 		const result = await ctxClient.listObjects({
 			MaxKeys: 1000, // Nice one. LOL
@@ -51,7 +27,7 @@ const useDeleteObjects = () => {
 		if (!crawl)
 			dispatch({ type: 'load', keys: [key] });
 		else
-			fetchAllKeys(key);
+			fetchAllKeys(key); // not awaited..
 	};
 
 	const run = () => dispatch({ type: 'run' });
@@ -60,7 +36,7 @@ const useDeleteObjects = () => {
 		if (state.pending.length) {
 			ctxClient.deleteObjects({
 				Delete: {
-					Objects: state.pending, // .map(Key => ({ Key })),
+					Objects: state.pending.map(Key => ({ Key })),
 				},
 			})
 				.then((value: S3.DeleteObjectsOutput) => {
@@ -75,7 +51,7 @@ const useDeleteObjects = () => {
 
 	return {
 		state,
-		addKeys,
+		addKey,
 		run,
 	}
 }

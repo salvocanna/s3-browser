@@ -17,8 +17,6 @@ export type DeleteObjectsAction =
 	| { type: 'error', error: any }
 	;
 
-// todo: Note: filesState continuous deeply nested spreading is not great
-
 const deleteObjectsReducer = (state: DeleteObjectsState, action: DeleteObjectsAction): DeleteObjectsState => {
 	switch (action.type) {
 		case 'load':
@@ -55,4 +53,4 @@ const deleteObjectsReducer = (state: DeleteObjectsState, action: DeleteObjectsAc
 	}
 };
 
-export default putObjectsReducer;
+export default deleteObjectsReducer;
