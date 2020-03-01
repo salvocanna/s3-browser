@@ -24,15 +24,13 @@ function* worker() {
 	const client: AWSClient = yield getContext('aws');
 
 	try {
-		console.log("got in saga - list-objects");
-
 		let ContinuationToken: string = void 0;
 		const keys = [];
 
 		do {
 			const response: S3.Types.ListObjectsV2Output = yield call(client.listObjects, {
 				MaxKeys: 1000,
-
+				ContinuationToken,
 			});
 
 			keys.push(...response.Contents);
@@ -41,7 +39,7 @@ function* worker() {
 				ContinuationToken = response.NextContinuationToken;
 			else
 				ContinuationToken = void 0;
-		} while (ContinuationToken && false); // data.IsTruncated
+		} while (ContinuationToken);
 
 		yield put(action.listObjects.success(keys));
 	} catch (error) {
