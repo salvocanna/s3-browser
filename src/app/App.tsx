@@ -52,8 +52,7 @@ const App: React.FunctionComponent = ({ children }) => {
 	return (
 		<div className={'container-fluid'}>
 			{/* <Upload /> */}
-			{/* <Browser /> */}
-			<div>{'Well done!'}</div>
+			<Browser />
 			{children}
 
 			<DebugArea>

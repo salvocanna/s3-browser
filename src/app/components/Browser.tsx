@@ -1,5 +1,6 @@
 import { Card, Elevation, HTMLTable } from "@blueprintjs/core";
 
+import { ApplicationState } from '../store';
 import Breadcrumb from './Breadcrumb';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Item from './Item';
@@ -9,6 +10,7 @@ import { State } from '../reducers/fetcher';
 import { faFolder } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
 import useListObjects from '../hooks/use-list-objects';
+import { useSelector } from 'react-redux';
 
 const Element = styled.div`
 	cursor: pointer;
@@ -44,14 +46,16 @@ const formatEntries = ({ response }: State<S3.ListObjectsOutput, unknown>) => {
 }
 
 const Browser: React.FunctionComponent = () => {
-	const [list, path, setPath] = useListObjects('');
-	const entries = formatEntries(list);
+	// const [list, path, setPath] = useListObjects('');
+	const listObjects = useSelector((s: ApplicationState) => s.objects.listObjects);
+
+	// const entries = formatEntries(listObjects);
 
 	return (
 		<UnpaddedCard elevation={Elevation.ONE}>
-			<DefaultCardPaddding>
+			{/* <DefaultCardPaddding>
 				<Breadcrumb path={path} onPathChange={setPath} />
-			</DefaultCardPaddding>
+			</DefaultCardPaddding> */}
 
 			<HTMLTable interactive bordered striped>
 				<thead>
@@ -63,7 +67,7 @@ const Browser: React.FunctionComponent = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{entries.folders.map(item => (
+					{/* {entries.folders.map(item => (
 						<tr>
 							<td>
 								<Element onClick={() => setPath(item.Prefix)}>
@@ -80,8 +84,8 @@ const Browser: React.FunctionComponent = () => {
 							<td>{'--'}</td>
 						</tr>
 
-					))}
-					{entries.files.map(item => (
+					))} */}
+					{listObjects.response && listObjects.response.map(item => (
 						<Item item={item} />
 					))}
 				</tbody>
