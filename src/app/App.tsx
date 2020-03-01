@@ -4,6 +4,7 @@ import 'typeface-montserrat';
 // import { Button, Toaster } from '@blueprintjs/core';
 // import Client, { AWSConfig } from './client';
 import React, { useEffect, useMemo, useState } from 'react'
+import { faFolder, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ApplicationState } from './store';
@@ -15,7 +16,6 @@ import Upload from './components/Upload';
 import { clientActions } from './store/client';
 import clientContext from './contexts/client';
 import { credentialsKey } from './constants/local-storage';
-import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 // import { getItem } from './helpers/local-storage';
 import styled from 'styled-components';
 import toasterContext from './contexts/toaster';
@@ -130,8 +130,7 @@ const SelectedTr = styled.tr`
 
 const FileTypeIconWrap = styled.div`
 	display: flex;
-
-	/* display: inline-block; */
+	color: white;
 	width: 30px;
 	height: 30px;
 	border-radius: 4px;
@@ -146,6 +145,24 @@ const FileTypeIconWrap = styled.div`
 		width: 18px;
 		height: 18px;
 		fill: white;
+	}
+`;
+
+const FileTypeFolderWrap = styled.div`
+	display: flex;
+	width: 30px;
+	height: 30px;
+	vertical-align: middle;
+	margin: -5px 15px -5px 0px;
+
+	/* flex-direction: row;
+	justify-content: center;
+	align-items: center; */
+	color: #82C7F8;
+
+	svg {
+		width: 30px !important;
+		height: 30px !important;
 	}
 `;
 
@@ -199,7 +216,12 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>Homework2</td>
 						</tr>
 						<SelectedTr>
-							<td>Homework2</td>
+							<td>
+								<FileTypeFolderWrap>
+									<FontAwesomeIcon icon={faFolder} />
+								</FileTypeFolderWrap>
+								Homework2
+							</td>
 							<td>Homework3</td>
 						</SelectedTr>
 						<SelectedTr>
