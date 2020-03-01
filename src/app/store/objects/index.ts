@@ -10,7 +10,7 @@ export interface ObjectsState {
 	listObjects: AsyncState<ObjectList>;
 }
 
-export const initialObjectsState: ObjectsState = {
+export const initialState: ObjectsState = {
 	listObjects: {...initialAsyncState},
 }
 

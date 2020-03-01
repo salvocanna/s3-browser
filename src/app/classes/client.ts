@@ -1,5 +1,7 @@
 import { AWSError, S3 } from 'aws-sdk';
 
+import ClientError from './error';
+import LocalStorage from './local-storage';
 import { PromiseResult } from 'aws-sdk/lib/request';
 
 export interface AWSConfig {
@@ -56,6 +58,36 @@ const getClient = (config: AWSConfig): Client => {
 		deleteObjects: (params: Omit<S3.DeleteObjectsRequest, 'Bucket'>) =>
 			s3Client.deleteObjects({ ...params, Bucket: config.bucket }).promise(),
 	};
+};
+
+export class AWSClient {
+	private credentialStorage: LocalStorage<AWSConfig>;
+	private conf: AWSConfig;
+	private client: S3;
+
+	constructor(credentialStorage: LocalStorage<AWSConfig>) {
+		this.credentialStorage = credentialStorage;
+		this.loadConfig();
+	}
+
+	loadConfig = () => {
+		this.conf = this.credentialStorage.get();
+
+		// if (!this.conf)
+		// 	throw new ClientError('config_not_found');
+
+		this.createClient();
+	}
+
+	createClient = () => {
+		this.client = new S3({ ...defaultConfig, ...this.conf });
+	}
+
+	listObjects = (params: Omit<S3.ListObjectsV2Request, 'Bucket'>) =>
+		this.client.listObjectsV2({ ...params, Bucket: this.conf.bucket }).promise();
+
+	getSignedUrl = (params: GetSignedUrlRequest) =>
+		this.client.getSignedUrl('getObject', { ...params, Bucket: this.conf.bucket });
 };
 
 export default getClient;

@@ -38,5 +38,17 @@ export function setItem(key: string, value: any) {
 
 	localStorage.setItem(key, JSON.stringify(value));
 
-	return true;
+	return value;
+}
+
+export default class LocalStorage<T> {
+	private readonly key: string;
+
+	constructor(key: string) {
+		this.key = key;
+	}
+
+	get = (): T => getItem<T>(this.key);
+	set = (value: T): T => setItem(this.key, value);
+	remove = (): void => removeItem(this.key);
 }

@@ -2,7 +2,7 @@ import { Button, Card, Elevation, FormGroup, H4, HTMLTable, InputGroup, Text } f
 import React, { ChangeEvent, useContext, useState } from 'react';
 
 import { credentialsKey } from '../constants/local-storage';
-import { setItem } from '../helpers/local-storage';
+// import { setItem } from '../helpers/local-storage';
 import styled from 'styled-components';
 
 const CredentialWrapper = styled.div`
@@ -45,7 +45,7 @@ const Credential: React.FunctionComponent<CredentialProps> = ({ onSubmit }) => {
 	const onSaveClick = () => {
 		// Shouldn't really blindly trust the user input
 		// TODO need validation and a feedback loop
-		setItem(credentialsKey, { region, accessKeyId, secretAccessKey, bucket });
+		// setItem(credentialsKey, { region, accessKeyId, secretAccessKey, bucket });
 		onSubmit();
 	}
 
