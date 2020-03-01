@@ -1,4 +1,6 @@
-export type AsyncState<R, E = Error> =
+import ClientError from '@lib/error';
+
+export type AsyncState<R, E = ClientError> =
 	| {
 		loading: boolean;
 		error?: E | undefined;
@@ -16,7 +18,9 @@ export type AsyncState<R, E = Error> =
 	}
 ;
 
-export type AsyncMapState<R, E = Error> = Record<string, AsyncState<R, E>>;
+export type AsyncMapState<R, E = ClientError> = Record<string, AsyncState<R, E>>;
+
+export type AsyncProgressState<R, P, E = ClientError> = AsyncState<R, E>  & { progress?: P };
 
 export const initialAsyncState = {
 	loading: false,

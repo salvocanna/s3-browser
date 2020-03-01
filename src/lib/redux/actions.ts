@@ -3,11 +3,21 @@ import ClientError from '@lib/error';
 import { createAction } from 'typesafe-actions';
 
 export const success = (action: string) => `${action}:SUCCESS`;
+export const progress = (action: string) => `${action}:PROGRESS`;
 export const failure = (action: string) => `${action}:FAILURE`;
 
 export const createAsyncAction = <TReq, TRes, TErr = ClientError>(requestAction: string) => {
 	return {
 		request: createAction(requestAction, resolve => (payload: TReq) => resolve(payload)),
+		success: createAction(success(requestAction), resolve => (payload: TRes) => resolve(payload)),
+		failure: createAction(failure(requestAction), resolve => (payload: TErr) => resolve(payload)),
+	};
+};
+
+export const createAsyncProgressAction = <TReq, TProg, TRes, TErr = ClientError>(requestAction: string) => {
+	return {
+		request: createAction(requestAction, resolve => (payload: TReq) => resolve(payload)),
+		progress: createAction(progress(requestAction), resolve => (payload: TProg) => resolve(payload)),
 		success: createAction(success(requestAction), resolve => (payload: TRes) => resolve(payload)),
 		failure: createAction(failure(requestAction), resolve => (payload: TErr) => resolve(payload)),
 	};
