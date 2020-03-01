@@ -24,10 +24,10 @@ const DebugArea = styled.div`
 const toaster = Toaster.create({ position: 'top' });
 
 const App: React.FunctionComponent = ({ children }) => {
+	const createClient = useSelector((s: ApplicationState) => s.client.createClient);
 	// TODO HERE WE NEED TO CHECK CREDENTIAL - MAYBE
 
 	// const [cred, setCred] = useState(initialCredentials);
-	// useSelector((s: ApplicationState) => s.)
 	// const builtClient = useMemo(() => {
 	// 	if (cred)
 	// 		return Client(cred);
@@ -35,19 +35,17 @@ const App: React.FunctionComponent = ({ children }) => {
 
 	// // TODO: have a look how to optimise this
 	const reloadConfig = () => {
-	// 	const newCred = getItem(credentialsKey);
-
+		// 	const newCred = getItem(credentialsKey);
 		// setCred(newCred);
 	};
 
-	if (true)
+	if (createClient.loading)
+		return <div>{'Loading'}</div>;
+
+	if (!createClient.response)
 		return <Credential onSubmit={reloadConfig} />;
 
-	return compose(
-		[
-			[clientContext, builtClient],
-			[toasterContext, toaster],
-		],
+	return (
 		<div className={'container-fluid'}>
 			{/* <Upload /> */}
 			{/* <Browser /> */}

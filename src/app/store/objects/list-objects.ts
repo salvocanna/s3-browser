@@ -28,7 +28,7 @@ function* worker() {
 		console.log("got in saga");
 
 
-		yield put(action.listObjects.success(23));
+		yield put(action.listObjects.success([]));
 	} catch (error) {
 		yield put(action.listObjects.failure(error));
 	}

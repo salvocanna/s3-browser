@@ -67,14 +67,13 @@ export class AWSClient {
 
 	constructor(credentialStorage: LocalStorage<AWSConfig>) {
 		this.credentialStorage = credentialStorage;
-		this.loadConfig();
 	}
 
 	loadConfig = () => {
 		this.conf = this.credentialStorage.get();
 
-		// if (!this.conf)
-		// 	throw new ClientError('config_not_found');
+		if (!this.conf)
+			throw new ClientError('config_not_found');
 
 		this.createClient();
 	}

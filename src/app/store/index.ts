@@ -55,7 +55,6 @@ export const configureStore = (history: History) => {
 		composeEnhancers(applyMiddleware(sagaMiddleware, routerMiddleware(history))),
 	);
 
-
 	sagaMiddleware.setContext(context);
 	sagaMiddleware.run(rootSaga);
 
