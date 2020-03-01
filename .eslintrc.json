@@ -1,9 +1,10 @@
 {
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
+    "plugin:react/recommended",
+    "tslint-config-prettier"
   ],
   "globals": {
     "process": false
@@ -119,6 +120,7 @@
     "prefer-rest-params": 1,
     "prefer-spread": 1,
     "prefer-template": 1,
+    "prettier/prettier": 0,
     "quote-props": [1, "consistent-as-needed"],
     "quotes": [1, "single"],
     "radix": 1,

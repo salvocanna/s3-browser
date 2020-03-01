@@ -1,22 +1,35 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "baseUrl": ".",
     "allowJs": false,
-    "skipLibCheck": false,
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": [
+      "dom",
+      "es7",
+      "es2017"
+    ],
     "module": "esnext",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "lib": ["dom", "es7", "es2017"],
-    "isolatedModules": true,
-    "strictNullChecks": false,
-    "pretty": true,
     "noEmit": true,
-    "jsx": "preserve",
-    "types": ["react"],
+    "pretty": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": false,
+    "strict": true,
+    "strictNullChecks": false,
+    "target": "esnext",
+    "types": [
+      "react"
+    ],
+    "typeRoots": [
+      "node_modules/@types",
+      "src/lib/@types"
+    ]
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

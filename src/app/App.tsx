@@ -2,7 +2,7 @@ import 'typeface-roboto';
 
 import { Button, Toaster } from '@blueprintjs/core';
 import Client, { AWSConfig } from './client';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react'
 
 import Browser from './components/Browser';
 import Credential from './components/Credential';
@@ -21,13 +21,14 @@ const DebugArea = styled.div`
 
 const toaster = Toaster.create({ position: 'top' });
 
-const App: React.FunctionComponent = () => {
+const App: React.FunctionComponent = ({ children }) => {
+	// TODO HERE WE NEED TO CHECK CREDENTIAL - MAYBE
+
 	const [cred, setCred] = useState(initialCredentials);
 	const builtClient = useMemo(() => {
 		if (cred)
 			return Client(cred);
 	}, [cred]);
-
 
 	// TODO: have a look how to optimise this
 	const reloadConfig = () => {
@@ -45,8 +46,9 @@ const App: React.FunctionComponent = () => {
 			[toasterContext, toaster],
 		],
 		<div className={'container-fluid'}>
-			<Upload />
-			<Browser />
+			{/* <Upload /> */}
+			{/* <Browser /> */}
+			{children}
 
 			<DebugArea>
 				<Button onClick={reloadConfig} icon={'refresh'}>
