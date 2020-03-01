@@ -32,7 +32,7 @@ function* worker({ payload }: PayloadAction<string, AWSConfig>) {
 			client.loadConfig();
 		}
 
-		const resp = yield call(client.listObjects, { Prefix: '/' });
+		yield call(client.listObjects, { Prefix: '/' });
 
 		yield put(action.init.success({
 			auth: true,

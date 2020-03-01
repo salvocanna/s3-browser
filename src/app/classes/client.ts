@@ -13,9 +13,10 @@ export interface AWSConfig {
 	bucket: string;
 }
 
-const defaultConfig: Partial<AWSConfig> = {
+const defaultConfig: Partial<S3.ClientConfiguration> = {
 	region: 'eu-west-1',
 	apiVersion: '2006-03-01',
+	maxRetries: 0,
 }
 
 interface PutObjectRequestPayload extends Omit<S3.PutObjectRequest, 'Bucket'> {
@@ -79,7 +80,7 @@ export class AWSClient {
 	}
 
 	setConfig = (conf: AWSConfig) => {
-		this.credentialStorage.set(conf);
+		this.conf = this.credentialStorage.set(conf);
 
 		this.createClient();
 	}
