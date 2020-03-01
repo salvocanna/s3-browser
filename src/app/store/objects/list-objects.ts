@@ -1,7 +1,8 @@
 import { call, getContext, put, takeEvery } from 'redux-saga/effects';
 
-import { AsyncState } from '@lib/redux/state';
-import { ObjectList } from './types';
+import { AWSClient } from 'src/app/classes/client';
+import { ObjectList } from 'aws-sdk/clients/s3';
+import { S3 } from 'aws-sdk';
 import { createAsyncAction } from '@lib/redux/actions';
 import { createAsyncReducer } from '@lib/redux/async-reducer';
 
@@ -19,16 +20,30 @@ export function* watcher() {
 	yield takeEvery(actionType.LIST_OBJECTS, worker);
 }
 
-// function* worker({ payload }: PayloadAction<string, undefined>) {
 function* worker() {
-	// const client: any = yield getContext('aws');
+	const client: AWSClient = yield getContext('aws');
 
 	try {
-		// fetch pagination here..
-		console.log("got in saga");
+		console.log("got in saga - list-objects");
 
+		let ContinuationToken: string = void 0;
+		const keys = [];
 
-		yield put(action.listObjects.success([]));
+		do {
+			const response: S3.Types.ListObjectsV2Output = yield call(client.listObjects, {
+				MaxKeys: 1000,
+
+			});
+
+			keys.push(...response.Contents);
+
+			if (response.IsTruncated && response.NextContinuationToken)
+				ContinuationToken = response.NextContinuationToken;
+			else
+				ContinuationToken = void 0;
+		} while (ContinuationToken && false); // data.IsTruncated
+
+		yield put(action.listObjects.success(keys));
 	} catch (error) {
 		yield put(action.listObjects.failure(error));
 	}
