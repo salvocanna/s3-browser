@@ -12,7 +12,6 @@ import copy from 'copy-to-clipboard';
 import { faFile } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment';
 import styled from 'styled-components';
-import useListObjects from '../hooks/use-list-objects';
 
 const Element = styled.div`
 	cursor: pointer;
