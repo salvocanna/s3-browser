@@ -58,7 +58,7 @@ export const configureStore = (history: History) => {
 	sagaMiddleware.setContext(context);
 	sagaMiddleware.run(rootSaga);
 
-	store.dispatch(Client.clientActions.createClient.request(void 0));
+	store.dispatch(Client.clientActions.init.request(void 0));
 
 	return store;
 }

@@ -1,6 +1,6 @@
 import { AWSError, S3 } from 'aws-sdk';
 
-import ClientError from './error';
+import ClientError from '@lib/error';
 import LocalStorage from './local-storage';
 import { PromiseResult } from 'aws-sdk/lib/request';
 
@@ -74,6 +74,12 @@ export class AWSClient {
 
 		if (!this.conf)
 			throw new ClientError('config_not_found');
+
+		this.createClient();
+	}
+
+	setConfig = (conf: AWSConfig) => {
+		this.credentialStorage.set(conf);
 
 		this.createClient();
 	}

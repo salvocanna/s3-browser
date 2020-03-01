@@ -33,7 +33,7 @@ const ButtonWrapper = styled.div`
 `;
 
 interface CredentialProps {
-	onSubmit: () => void;
+	onSubmit: (region: string, key: string, secret: string, bucket: string) => void;
 }
 
 const Credential: React.FunctionComponent<CredentialProps> = ({ onSubmit }) => {
@@ -45,9 +45,8 @@ const Credential: React.FunctionComponent<CredentialProps> = ({ onSubmit }) => {
 	const onSaveClick = () => {
 		// Shouldn't really blindly trust the user input
 		// TODO need validation and a feedback loop
-		// setItem(credentialsKey, { region, accessKeyId, secretAccessKey, bucket });
-		onSubmit();
-	}
+		onSubmit(region, accessKeyId, secretAccessKey, bucket);
+	};
 
 	return (
 		<CredentialWrapper>

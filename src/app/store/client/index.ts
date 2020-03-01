@@ -1,4 +1,4 @@
-import * as createClient from './create-client';
+import * as init from './init';
 
 import { AsyncState, initialAsyncState } from '@lib/redux/state';
 import { all, fork } from 'redux-saga/effects';
@@ -7,27 +7,27 @@ import { ClientStatus } from './types';
 import { combineReducers } from 'redux';
 
 export interface ClientState {
-	createClient: AsyncState<ClientStatus>;
+	init: AsyncState<ClientStatus>;
 }
 
 export const initialState: ClientState = {
-	createClient: {...initialAsyncState},
+	init: {...initialAsyncState},
 }
 
 export const clientActionTypes = {
-	...createClient.actionType,
+	...init.actionType,
 };
 
 export const clientActions = {
-	...createClient.action,
+	...init.action,
 };
 
 export const clientReducers = combineReducers({
-	createClient: createClient.reducer,
+	init: init.reducer,
 });
 
 export function* clientSaga() {
 	yield all([
-		fork(createClient.watcher),
+		fork(init.watcher),
 	]);
 }
