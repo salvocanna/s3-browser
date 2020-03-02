@@ -90,6 +90,7 @@ const Table = styled.table`
 			cursor: pointer;
 
 			td {
+				vertical-align: middle;
 				flex-direction: row;
 				align-items: center;
 
