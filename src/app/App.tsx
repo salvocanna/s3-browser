@@ -81,6 +81,7 @@ const Table = styled.table`
 			text-align: left;
 			color: #547083;
 			font-size: 12px;
+			font-weight: 500;
 			padding: 10px 10px 18px 10px;
 		}
 	}
@@ -97,9 +98,15 @@ const Table = styled.table`
 				text-align: left;
 				padding: 18px 10px;
 
-				font-size: 13px;
-				font-weight: 600;
-				color: #19496A;
+				color: #869BA9;
+				font-size: 11px;
+				font-weight: 300;
+
+				&:first-child {
+					font-size: 13px;
+					font-weight: 600;
+					color: #19496A;
+				}
 
 				&:hover {
 					color: #37A0EA;
@@ -187,9 +194,7 @@ const App: React.FunctionComponent = ({ children }) => {
 
 	if (!init.response) {
 		return (
-			<Credential
-				onSubmit={reloadConfig}
-			/>
+			<Credential onSubmit={reloadConfig} />
 		);
 	}
 
@@ -201,7 +206,9 @@ const App: React.FunctionComponent = ({ children }) => {
 					<thead>
 						<tr>
 							<th>Name</th>
-							<th>XXX</th>
+							<th>Items count</th>
+							<th>Last modified</th>
+							<th>Size</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -216,7 +223,9 @@ const App: React.FunctionComponent = ({ children }) => {
 									</div>
 								</InnerCellAligned>
 							</td>
-							<td>Homework2</td>
+							<td>-</td>
+							<td>30/12/1990</td>
+							<td>130B</td>
 						</tr>
 						<SelectedTr>
 							<td>
@@ -230,7 +239,9 @@ const App: React.FunctionComponent = ({ children }) => {
 
 								</InnerCellAligned>
 							</td>
-							<td>Homework3</td>
+							<td>30</td>
+							<td>30/12/1990</td>
+							<td>481.09MB</td>
 						</SelectedTr>
 						<SelectedTr>
 							<td>
@@ -241,11 +252,15 @@ const App: React.FunctionComponent = ({ children }) => {
 									<div>{'Homework'}</div>
 								</InnerCellAligned>
 							</td>
-							<td>Homework2</td>
+							<td>-</td>
+							<td>30/12/1990</td>
+							<td>481.09MB</td>
 						</SelectedTr>
 						<tr>
 							<td>All Abc XXX</td>
-							<td>All Abc XXX2</td>
+							<td>-</td>
+							<td>30/12/1990</td>
+							<td>481.09MB</td>
 						</tr>
 					</tbody>
 				</Table>
