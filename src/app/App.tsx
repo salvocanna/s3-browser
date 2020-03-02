@@ -12,19 +12,16 @@ import Browser from './components/Browser';
 import Credential from './components/Credential';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Reset } from 'styled-reset'
+import { S3 } from 'aws-sdk';
 import Upload from './components/Upload';
 import { clientActions } from './store/client';
 import clientContext from './contexts/client';
 import { credentialsKey } from './constants/local-storage';
-// import { getItem } from './helpers/local-storage';
 import styled from 'styled-components';
-import toasterContext from './contexts/toaster';
-
-// const initialCredentials = getItem<AWSConfig>(credentialsKey);
 
 const MainContainer = styled.div`
 	background: #F3F6F9;
-	border-top: 5px #D4DFE9;
+	border-top: 5px solid #D4DFE9;
 
 	border-top-left-radius: 50px;
 	padding: 20px;
@@ -166,32 +163,24 @@ const FileTypeFolderWrap = styled.div`
 	}
 `;
 
-const SelectableRow: React.FunctionComponent = () => {
+
+const SelectableRow: React.FunctionComponent<{selected: boolean}> = ({ selected, children }) => {
 	const [over, setOver] = useState(false);
 
 	return (
 		<SelectableTr
-			selected={over}
+			selected={over || selected}
 			onMouseOver={() => setOver(true)}
 			onMouseOut={() => setOver(false)}
 		>
-			<td>
-				<InnerCellAligned>
-					<FileTypeIconWrap>
-						<FontAwesomeIcon icon={faQuestion} />
-					</FileTypeIconWrap>
-					<div>{'Homework'}</div>
-				</InnerCellAligned>
-			</td>
-			<td>-</td>
-			<td>30/12/1990</td>
-			<td>481.09MB</td>
+			{children}
 		</SelectableTr>
 	);
 };
 const App: React.FunctionComponent = ({ children }) => {
 	const init = useSelector((s: ApplicationState) => s.client.init);
 	const dispatch = useDispatch();
+	const [selection, setSelection] = useState<S3.Object[]>([]);
 
 	// // TODO: have a look how to optimise this
 	const reloadConfig = (region: string, accessKeyId: string, secretAccessKey: string, bucket: string) => {
@@ -262,8 +251,11 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>30/12/1990</td>
 							<td>481.09MB</td>
 						</tr> */}
-						<SelectableRow />
-						<SelectableRow />
+						{/* <SelectableRow
+							selected={selection.find(o => o.)}
+							onSelection={(o: S3.Object) => setSelection([...selection, o])}
+						/>
+						<SelectableRow selected /> */}
 					</tbody>
 				</Table>
 			</CardTable>
