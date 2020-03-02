@@ -1,6 +1,6 @@
 import { AWSError, S3 } from 'aws-sdk';
 
-import ClientError from '@lib/error';
+import ClientError from './error';
 import LocalStorage from './local-storage';
 import { PromiseResult } from 'aws-sdk/lib/request';
 

@@ -2,7 +2,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
     "plugin:react/recommended",
     "tslint-config-prettier"
   ],
@@ -147,7 +147,12 @@
     "yoda": 1
   },
 
-  "plugins": ["react", "@typescript-eslint/eslint-plugin", "prettier"],
+  "plugins": [
+    "react",
+    "@typescript-eslint/eslint-plugin",
+    "prettier",
+    "import"
+  ],
 
   "env": {
     "browser": true,
@@ -166,7 +171,8 @@
     "react": {
       "pragma": "React",
       "version": "detect"
-    }
+    },
+    "import/resolver": { "babel-module": {} }
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {

@@ -1,13 +1,13 @@
 import * as Client from './client';
 import * as Objects from './objects';
 
-import { AWSClient, AWSConfig } from '../classes/client';
+import { AWSClient, AWSConfig } from '@lib/client';
 import { RouterState, connectRouter } from 'connected-react-router';
 import { all, fork } from 'redux-saga/effects';
 import { applyMiddleware, createStore } from 'redux';
 
 import { History } from 'history';
-import LocalStorage from '../classes/local-storage';
+import LocalStorage from '@lib/local-storage';
 import { combineReducers } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';

@@ -1,4 +1,4 @@
-import { AWSClient, AWSConfig } from 'src/app/classes/client';
+import { AWSClient, AWSConfig } from '@lib/client';
 import { call, getContext, put, takeEvery } from 'redux-saga/effects';
 
 import ClientError from '@lib/error';

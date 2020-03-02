@@ -1,6 +1,6 @@
 import { call, getContext, put, takeEvery } from 'redux-saga/effects';
 
-import { AWSClient } from 'src/app/classes/client';
+import { AWSClient } from '@lib/client';
 import { ObjectList } from 'aws-sdk/clients/s3';
 import { S3 } from 'aws-sdk';
 import { createAsyncAction } from '@lib/redux/actions';

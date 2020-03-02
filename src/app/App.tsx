@@ -18,6 +18,7 @@ import { clientActions } from './store/client';
 import clientContext from './contexts/client';
 import { credentialsKey } from './constants/local-storage';
 import styled from 'styled-components';
+import toasterContext from './contexts/toaster';
 
 const MainContainer = styled.div`
 	background: #F3F6F9;
@@ -25,7 +26,7 @@ const MainContainer = styled.div`
 
 	border-top-left-radius: 50px;
 	padding: 20px;
-	font-family: 'Roboto';
+	font-family: 'Montserrat';
 	font-style: normal;
 	color: #19496A;
 `;
