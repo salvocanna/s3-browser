@@ -85,35 +85,6 @@ const Table = styled.table`
 			padding: 10px 10px 18px 10px;
 		}
 	}
-
-	tbody {
-		tr {
-			cursor: pointer;
-
-			td {
-				vertical-align: middle;
-				flex-direction: row;
-				align-items: center;
-
-				text-align: left;
-				padding: 18px 10px;
-
-				color: #869BA9;
-				font-size: 11px;
-				font-weight: 300;
-
-				&:first-child {
-					font-size: 13px;
-					font-weight: 600;
-					color: #19496A;
-				}
-
-				&:hover {
-					color: #37A0EA;
-				}
-			}
-		}
-	}
 `;
 
 const InnerCellAligned = styled.div`
@@ -121,19 +92,42 @@ const InnerCellAligned = styled.div`
 	align-items: center;
 `;
 
-const SelectedTr = styled.tr`
+const SelectableTr = styled.tr<{ selected: boolean }>`
+
+	cursor: pointer;
+
 	td {
-		background-color: #EFF7FD;
-	}
+		vertical-align: middle;
+		flex-direction: row;
+		align-items: center;
 
-	td:first-child {
-		border-top-left-radius: 10px;
-		border-bottom-left-radius: 10px;
-	}
+		text-align: left;
+		padding: 18px 10px;
 
-	td:last-child {
-		border-top-right-radius: 10px;
-		border-bottom-right-radius: 10px;
+		color: #869BA9;
+		font-size: 11px;
+		font-weight: 300;
+
+		&:first-child {
+			font-size: 13px;
+			font-weight: 600;
+			color: #19496A;
+		}
+
+		${({ selected }) => selected && `
+			background-color: #EFF7FD;
+			color: #37A0EA !important;
+		`};
+
+		&:first-child {
+			border-top-left-radius: 10px;
+			border-bottom-left-radius: 10px;
+		}
+
+		&:last-child {
+			border-top-right-radius: 10px;
+			border-bottom-right-radius: 10px;
+		}
 	}
 `;
 
@@ -172,9 +166,29 @@ const FileTypeFolderWrap = styled.div`
 	}
 `;
 
+const SelectableRow: React.FunctionComponent = () => {
+	const [over, setOver] = useState(false);
 
-// const toaster = Toaster.create({ position: 'top' });
-
+	return (
+		<SelectableTr
+			selected={over}
+			onMouseOver={() => setOver(true)}
+			onMouseOut={() => setOver(false)}
+		>
+			<td>
+				<InnerCellAligned>
+					<FileTypeIconWrap>
+						<FontAwesomeIcon icon={faQuestion} />
+					</FileTypeIconWrap>
+					<div>{'Homework'}</div>
+				</InnerCellAligned>
+			</td>
+			<td>-</td>
+			<td>30/12/1990</td>
+			<td>481.09MB</td>
+		</SelectableTr>
+	);
+};
 const App: React.FunctionComponent = ({ children }) => {
 	const init = useSelector((s: ApplicationState) => s.client.init);
 	const dispatch = useDispatch();
@@ -194,7 +208,9 @@ const App: React.FunctionComponent = ({ children }) => {
 
 	if (!init.response) {
 		return (
-			<Credential onSubmit={reloadConfig} />
+			<Credential
+				onSubmit={reloadConfig}
+			/>
 		);
 	}
 
@@ -212,7 +228,7 @@ const App: React.FunctionComponent = ({ children }) => {
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+						{/* <tr>
 							<td>
 								<InnerCellAligned>
 									<FileTypeIconWrap>
@@ -227,23 +243,7 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>30/12/1990</td>
 							<td>130B</td>
 						</tr>
-						<SelectedTr>
-							<td>
-								<InnerCellAligned>
-									<FileTypeFolderWrap>
-										<FontAwesomeIcon icon={faFolder} />
-									</FileTypeFolderWrap>
-									<div>
-										Homework2
-									</div>
-
-								</InnerCellAligned>
-							</td>
-							<td>30</td>
-							<td>30/12/1990</td>
-							<td>481.09MB</td>
-						</SelectedTr>
-						<SelectedTr>
+						<SelectableTr>
 							<td>
 								<InnerCellAligned>
 									<FileTypeIconWrap>
@@ -255,13 +255,15 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>-</td>
 							<td>30/12/1990</td>
 							<td>481.09MB</td>
-						</SelectedTr>
+						</SelectableTr>
 						<tr>
 							<td>All Abc XXX</td>
 							<td>-</td>
 							<td>30/12/1990</td>
 							<td>481.09MB</td>
-						</tr>
+						</tr> */}
+						<SelectableRow />
+						<SelectableRow />
 					</tbody>
 				</Table>
 			</CardTable>
