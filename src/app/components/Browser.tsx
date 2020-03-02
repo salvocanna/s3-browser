@@ -9,7 +9,6 @@ import S3 from 'aws-sdk/clients/s3';
 import { State } from '../reducers/fetcher';
 import { faFolder } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
-import useListObjects from '../hooks/use-list-objects';
 import { useSelector } from 'react-redux';
 
 const Element = styled.div`

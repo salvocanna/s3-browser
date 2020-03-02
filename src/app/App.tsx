@@ -79,7 +79,7 @@ const Table = styled.table`
 
 		th {
 			text-align: left;
-			color: #536F82;
+			color: #547083;
 			font-size: 12px;
 			padding: 10px 10px 18px 10px;
 		}
@@ -90,10 +90,6 @@ const Table = styled.table`
 			cursor: pointer;
 
 			td {
-				&:first-child {
-					display: flex;
-				}
-
 				flex-direction: row;
 				align-items: center;
 
@@ -110,6 +106,11 @@ const Table = styled.table`
 			}
 		}
 	}
+`;
+
+const InnerCellAligned = styled.div`
+	display: flex;
+	align-items: center;
 `;
 
 const SelectedTr = styled.tr`
@@ -155,9 +156,6 @@ const FileTypeFolderWrap = styled.div`
 	vertical-align: middle;
 	margin: -5px 15px -5px 0px;
 
-	/* flex-direction: row;
-	justify-content: center;
-	align-items: center; */
 	color: #82C7F8;
 
 	svg {
@@ -208,28 +206,39 @@ const App: React.FunctionComponent = ({ children }) => {
 					<tbody>
 						<tr>
 							<td>
-								<FileTypeIconWrap>
-									<FontAwesomeIcon icon={faQuestion} />
-								</FileTypeIconWrap>
-								{'Homework'}
+								<InnerCellAligned>
+									<FileTypeIconWrap>
+										<FontAwesomeIcon icon={faQuestion} />
+									</FileTypeIconWrap>
+									<div>
+										{'Homework'}
+									</div>
+								</InnerCellAligned>
 							</td>
 							<td>Homework2</td>
 						</tr>
 						<SelectedTr>
 							<td>
-								<FileTypeFolderWrap>
-									<FontAwesomeIcon icon={faFolder} />
-								</FileTypeFolderWrap>
-								Homework2
+								<InnerCellAligned>
+									<FileTypeFolderWrap>
+										<FontAwesomeIcon icon={faFolder} />
+									</FileTypeFolderWrap>
+									<div>
+										Homework2
+									</div>
+
+								</InnerCellAligned>
 							</td>
 							<td>Homework3</td>
 						</SelectedTr>
 						<SelectedTr>
 							<td>
-								<FileTypeIconWrap>
-									<FontAwesomeIcon icon={faQuestion} />
-								</FileTypeIconWrap>
-								{'Homework'}
+								<InnerCellAligned>
+									<FileTypeIconWrap>
+										<FontAwesomeIcon icon={faQuestion} />
+									</FileTypeIconWrap>
+									<div>{'Homework'}</div>
+								</InnerCellAligned>
 							</td>
 							<td>Homework2</td>
 						</SelectedTr>
