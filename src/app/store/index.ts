@@ -1,3 +1,4 @@
+import * as Browser from './browser';
 import * as Client from './client';
 import * as Objects from './objects';
 
@@ -20,21 +21,24 @@ export const useSelector: TypedUseSelectorHook<ApplicationState> = useReduxSelec
 export interface ApplicationState {
 	router?: RouterState;
 
-	objects: Objects.ObjectsState;
+	browser: Browser.BrowserState;
 	client: Client.ClientState;
+	objects: Objects.ObjectsState;
 }
 
 export const createRootReducer = (history: History) => combineReducers<ApplicationState>({
 	router: connectRouter(history),
 
-	objects: Objects.objectsReducers,
+	browser: Browser.browserReducers,
 	client: Client.clientReducers,
+	objects: Objects.objectsReducers,
 });
 
 export function* rootSaga() {
 	yield all([
-		fork(Objects.objectsSaga),
+		fork(Browser.browserSaga),
 		fork(Client.clientSaga),
+		fork(Objects.objectsSaga),
 	]);
 }
 
@@ -43,8 +47,9 @@ export const configureStore = (history: History) => {
 	const sagaMiddleware = createSagaMiddleware();
 
 	const initialState: ApplicationState = {
-		objects: Objects.initialState,
+		browser: Browser.initialState,
 		client: Client.initialState,
+		objects: Objects.initialState,
 	};
 
 	const localStorage = new LocalStorage<AWSConfig>(credentialsKey);
