@@ -2,10 +2,11 @@ import { AsyncMapReducer, MapPayloadMeta } from './types';
 import { AsyncMapState, AsyncState, initialAsyncState } from './state';
 import { failure, success } from './actions';
 
+import ClientError from '@lib/error';
 import { PayloadMetaAction } from 'typesafe-actions';
 
 export const createAsyncMapReducer =
-	<R, E = Error>(request: string, initialState: AsyncMapState<R, E> = {}): AsyncMapReducer<R, E> =>
+	<R, E = ClientError>(request: string, initialState: AsyncMapState<R, E> = {}): AsyncMapReducer<R, E> =>
 		(state = initialState, { type, payload, meta }): AsyncMapState<R, E> => {
 			switch (type) {
 				case request:
