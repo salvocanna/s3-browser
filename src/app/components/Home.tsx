@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 
-import { objectsActions } from '../store/objects';
+import { actionListObjects } from '@app/store/objects/list-objects';
 import { useDispatch } from 'react-redux';
 
 const Home: React.FunctionComponent = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(objectsActions.listObjects.request(void 0));
+		dispatch(actionListObjects.request(void 0));
 	}, []);
 
 	return (

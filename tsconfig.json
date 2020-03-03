@@ -30,7 +30,11 @@
     "typeRoots": [
       "node_modules/@types",
       "src/lib/@types"
-    ]
+    ],
+    "paths": {
+      "@app/*": ["./src/app/*"],
+      "@lib/*": ["./src/lib/*"],
+    }
   },
   "include": [
     "./src/**/*"

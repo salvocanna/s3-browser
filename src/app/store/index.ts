@@ -3,6 +3,7 @@ import * as Objects from './objects';
 
 import { AWSClient, AWSConfig } from '@lib/client';
 import { RouterState, connectRouter } from 'connected-react-router';
+import { TypedUseSelectorHook, useSelector as useReduxSelector } from 'react-redux';
 import { all, fork } from 'redux-saga/effects';
 import { applyMiddleware, createStore } from 'redux';
 
@@ -13,6 +14,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import { credentialsKey } from '../constants/local-storage';
 import { routerMiddleware } from 'connected-react-router';
+
+export const useSelector: TypedUseSelectorHook<ApplicationState> = useReduxSelector;
 
 export interface ApplicationState {
 	router?: RouterState;

@@ -10,9 +10,7 @@ export const actionType = {
 	LIST_OBJECTS: '@store/objects/LIST_OBJECTS',
 };
 
-export const action = {
-	listObjects: createAsyncAction<undefined, ObjectList>(actionType.LIST_OBJECTS),
-};
+export const actionListObjects = createAsyncAction<undefined, ObjectList>(actionType.LIST_OBJECTS),
 
 export const reducer = createAsyncReducer<ObjectList>(actionType.LIST_OBJECTS);
 
@@ -41,8 +39,8 @@ function* worker() {
 				ContinuationToken = void 0;
 		} while (ContinuationToken);
 
-		yield put(action.listObjects.success(keys));
+		yield put(actionListObjects.success(keys));
 	} catch (error) {
-		yield put(action.listObjects.failure(error));
+		yield put(actionListObjects.failure(error));
 	}
 }

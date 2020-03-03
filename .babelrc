@@ -16,7 +16,8 @@
           "./src"
         ],
         "alias": {
-          "@lib": "./src/lib"
+          "@lib": "./src/lib",
+          "@app": "./src/app"
         }
       }
     ]

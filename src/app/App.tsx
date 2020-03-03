@@ -1,13 +1,12 @@
 import 'typeface-roboto';
 import 'typeface-montserrat';
 
+import { ApplicationState, useSelector } from './store';
 // import { Button, Toaster } from '@blueprintjs/core';
 // import Client, { AWSConfig } from './client';
 import React, { useEffect, useMemo, useState } from 'react'
 import { faFolder, faQuestion } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { ApplicationState } from './store';
 import Browser from './components/Browser';
 import Credential from './components/Credential';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +18,7 @@ import clientContext from './contexts/client';
 import { credentialsKey } from './constants/local-storage';
 import styled from 'styled-components';
 import toasterContext from './contexts/toaster';
+import { useDispatch } from 'react-redux';
 
 const MainContainer = styled.div`
 	background: #F3F6F9;
@@ -164,24 +164,37 @@ const FileTypeFolderWrap = styled.div`
 	}
 `;
 
+interface SelectableRowP {
+	selected: boolean;
+	onSelectionChange: (selected: boolean) => void;
+}
 
-const SelectableRow: React.FunctionComponent<{selected: boolean}> = ({ selected, children }) => {
+
+const SelectableRow: React.FunctionComponent<SelectableRowP> = ({ selected, onSelectionChange, children }) => {
 	const [over, setOver] = useState(false);
+	const handleSelection = () => onSelectionChange(!selected);
 
 	return (
 		<SelectableTr
 			selected={over || selected}
 			onMouseOver={() => setOver(true)}
 			onMouseOut={() => setOver(false)}
+			onClick={handleSelection}
 		>
 			{children}
 		</SelectableTr>
 	);
 };
+
+const appSelector = () => (state: ApplicationState) => ([
+	state.client.init,
+	state.objects.listObjects
+]) as const;
+
 const App: React.FunctionComponent = ({ children }) => {
-	const init = useSelector((s: ApplicationState) => s.client.init);
+	const [init, listObjects] = useSelector(appSelector());
 	const dispatch = useDispatch();
-	const [selection, setSelection] = useState<S3.Object[]>([]);
+	const [selection, setSelection] = useState<string[]>([]);
 
 	// // TODO: have a look how to optimise this
 	const reloadConfig = (region: string, accessKeyId: string, secretAccessKey: string, bucket: string) => {
@@ -234,6 +247,24 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>130B</td>
 						</tr>
 						<SelectableTr>
+
+						</SelectableTr>
+						<tr>
+							<td>All Abc XXX</td>
+							<td>-</td>
+							<td>30/12/1990</td>
+							<td>481.09MB</td>
+						</tr> */}
+						{/* {objectList.} */}
+						<SelectableRow
+							selected={selection.includes('123')}
+							onSelectionChange={on => {
+								if (on)
+									setSelection([...selection, '123']);
+								else
+									setSelection(selection.filter(s => s !== '123'));
+							}}
+						>
 							<td>
 								<InnerCellAligned>
 									<FileTypeIconWrap>
@@ -245,18 +276,8 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>-</td>
 							<td>30/12/1990</td>
 							<td>481.09MB</td>
-						</SelectableTr>
-						<tr>
-							<td>All Abc XXX</td>
-							<td>-</td>
-							<td>30/12/1990</td>
-							<td>481.09MB</td>
-						</tr> */}
-						{/* <SelectableRow
-							selected={selection.find(o => o.)}
-							onSelection={(o: S3.Object) => setSelection([...selection, o])}
-						/>
-						<SelectableRow selected /> */}
+						</SelectableRow>
+						{/* <SelectableRow selected /> */}
 					</tbody>
 				</Table>
 			</CardTable>

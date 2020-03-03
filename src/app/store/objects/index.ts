@@ -14,14 +14,6 @@ export const initialState: ObjectsState = {
 	listObjects: {...initialAsyncState},
 }
 
-export const objectsActionTypes = {
-	...listObjects.actionType,
-};
-
-export const objectsActions = {
-	...listObjects.action,
-};
-
 export const objectsReducers = combineReducers({
 	listObjects: listObjects.reducer,
 });
