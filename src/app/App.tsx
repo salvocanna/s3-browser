@@ -86,6 +86,7 @@ const Table = styled.table`
 const InnerCellAligned = styled.div`
 	display: flex;
 	align-items: center;
+
 `;
 
 const SelectableTr = styled.tr<{ selected: boolean }>`
@@ -160,6 +161,23 @@ const FileTypeFolderWrap = styled.div`
 		width: 30px !important;
 		height: 30px !important;
 	}
+`;
+
+const Ellipsis = styled.div`
+	/* overflow: hidden;
+	text-overflow: ellipsis;
+	width: 89%;
+	white-space: nowrap;
+	display: block;
+	> * {
+		display: inline;
+	} */
+
+	flex: 1;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 `;
 
 interface SelectableRowP {
@@ -248,30 +266,30 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>30/12/1990</td>
 							<td>481.09MB</td>
 						</tr> */}
-						{listObjects.response && listObjects.response.map(i => (
-							<div>{i.Key}</div>
+						{listObjects.response && [listObjects.response[0]].map(i => (
+							<SelectableRow
+								selected={selection.includes(i.Key)}
+								onSelectionChange={on => {
+									if (on)
+										setSelection([...selection, i.Key]);
+									else
+										setSelection(selection.filter(s => s !== i.Key));
+								}}
+							>
+								<td>
+									<InnerCellAligned>
+										<FileTypeIconWrap>
+											<FontAwesomeIcon icon={faQuestion} />
+										</FileTypeIconWrap>
+										<Ellipsis>{i.Key.substr(0, 20)}</Ellipsis>
+									</InnerCellAligned>
+								</td>
+								<td>-</td>
+								<td>30/12/1990</td>
+								<td>481.09MB</td>
+							</SelectableRow>
 						))}
-						<SelectableRow
-							selected={selection.includes('123')}
-							onSelectionChange={on => {
-								if (on)
-									setSelection([...selection, '123']);
-								else
-									setSelection(selection.filter(s => s !== '123'));
-							}}
-						>
-							<td>
-								<InnerCellAligned>
-									<FileTypeIconWrap>
-										<FontAwesomeIcon icon={faQuestion} />
-									</FileTypeIconWrap>
-									<div>{'Homework'}</div>
-								</InnerCellAligned>
-							</td>
-							<td>-</td>
-							<td>30/12/1990</td>
-							<td>481.09MB</td>
-						</SelectableRow>
+
 						{/* <SelectableRow selected /> */}
 					</tbody>
 				</Table>
