@@ -2,8 +2,6 @@ import 'typeface-roboto';
 import 'typeface-montserrat';
 
 import { ApplicationState, useSelector } from './store';
-// import { Button, Toaster } from '@blueprintjs/core';
-// import Client, { AWSConfig } from './client';
 import React, { useEffect, useMemo, useState } from 'react'
 import { faFolder, faQuestion } from '@fortawesome/free-solid-svg-icons';
 
@@ -186,13 +184,8 @@ const SelectableRow: React.FunctionComponent<SelectableRowP> = ({ selected, onSe
 	);
 };
 
-const appSelector = () => (state: ApplicationState) => ([
-	state.client.init,
-	state.objects.listObjects
-]) as const;
-
 const App: React.FunctionComponent = ({ children }) => {
-	const [init, listObjects] = useSelector(appSelector());
+	const [init, listObjects] = useSelector(s => ([s.client.init, s.objects.listObjects]));
 	const dispatch = useDispatch();
 	const [selection, setSelection] = useState<string[]>([]);
 
@@ -255,7 +248,9 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>30/12/1990</td>
 							<td>481.09MB</td>
 						</tr> */}
-						{/* {objectList.} */}
+						{listObjects.response && listObjects.response.map(i => (
+							<div>{i.Key}</div>
+						))}
 						<SelectableRow
 							selected={selection.includes('123')}
 							onSelectionChange={on => {
