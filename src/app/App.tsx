@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Reset } from 'styled-reset'
 import { S3 } from 'aws-sdk';
 import Upload from './components/Upload';
+import { actionSelectionUpdate } from './store/browser/selection';
 import { clientActions } from './store/client';
 import clientContext from './contexts/client';
 import { credentialsKey } from './constants/local-storage';
@@ -202,10 +203,16 @@ const SelectableRow: React.FunctionComponent<SelectableRowP> = ({ selected, onSe
 	);
 };
 
+const appSelector = (state: ApplicationState) => ([
+	state.client.init,
+	state.objects.listObjects,
+	state.browser.selection,
+] as const);
+
 const App: React.FunctionComponent = ({ children }) => {
-	const [init, listObjects] = useSelector(s => ([s.client.init, s.objects.listObjects]));
+	const [init, listObjects, selection] = useSelector(appSelector);
 	const dispatch = useDispatch();
-	const [selection, setSelection] = useState<string[]>([]);
+	// const [selection, setSelection] = useState<string[]>([]);
 
 	// // TODO: have a look how to optimise this
 	const reloadConfig = (region: string, accessKeyId: string, secretAccessKey: string, bucket: string) => {
@@ -268,12 +275,9 @@ const App: React.FunctionComponent = ({ children }) => {
 						</tr> */}
 						{listObjects.response && listObjects.response.map(i => (
 							<SelectableRow
-								selected={selection.includes(i.Key)}
+								selected={selection.response && selection.response.includes(i.Key)}
 								onSelectionChange={on => {
-									if (on)
-										setSelection([...selection, i.Key]);
-									else
-										setSelection(selection.filter(s => s !== i.Key));
+									dispatch(actionSelectionUpdate.request({type: on ? 'add' : 'remove', keys: [i.Key]}));
 								}}
 							>
 								<td>
