@@ -252,6 +252,7 @@ const App: React.FunctionComponent = ({ children }) => {
 				<div>
 					<div>{'Current path: '}</div>
 					<div>{currentPath.response}</div>
+					<div onClick={e => dispatch(actionSetPath.request({ path: '' }))}>{'Reset'}</div>
 				</div>
 			)}
 			<CardTable>
@@ -292,26 +293,26 @@ const App: React.FunctionComponent = ({ children }) => {
 						{listObjects.response && listObjects.response
 							.filter(i => !currentPath.response || (i.Key !== currentPath.response && i.Key.startsWith(currentPath.response)))
 							.map(i => (
-							<SelectableRow
-								selected={selection.response && selection.response.includes(i.Key)}
-								onSelectionChange={on => {
-									dispatch(actionSelectionUpdate.request({ type: on ? 'add' : 'remove', keys: [i.Key] }));
-								}}
-								onEnter={() => dispatch(actionSetPath.request({ path: i.Key }))}
-							>
-								<td>
-									<InnerCellAligned>
-										<FileTypeIconWrap>
-											<FontAwesomeIcon icon={faQuestion} />
-										</FileTypeIconWrap>
-										<Ellipsis>{i.Key.substr(-20)}</Ellipsis>
-									</InnerCellAligned>
-								</td>
-								<td>-</td>
-								<td>30/12/1990</td>
-								<td>481.09MB</td>
-							</SelectableRow>
-						))}
+								<SelectableRow
+									key={i.Key}
+									selected={selection.response && selection.response.includes(i.Key)}
+									onSelectionChange={on => dispatch(actionSelectionUpdate.request({ type: on ? 'add' : 'remove', keys: [i.Key] }))}
+									onEnter={() => dispatch(actionSetPath.request({ path: i.Key }))}
+								>
+									<td>
+										<InnerCellAligned>
+											<FileTypeIconWrap>
+												<FontAwesomeIcon icon={faQuestion} />
+											</FileTypeIconWrap>
+											<Ellipsis>{i.Key.substr(-20)}</Ellipsis>
+										</InnerCellAligned>
+									</td>
+									<td>-</td>
+									<td>30/12/1990</td>
+									<td>481.09MB</td>
+								</SelectableRow>
+							)
+						)}
 
 						{/* <SelectableRow selected /> */}
 					</tbody>
