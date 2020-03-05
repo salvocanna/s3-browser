@@ -12,6 +12,7 @@ import { Reset } from 'styled-reset'
 import { S3 } from 'aws-sdk';
 import Upload from './components/Upload';
 import { actionSelectionUpdate } from './store/browser/selection';
+import { actionSetPath } from './store/browser/current-path';
 import { clientActions } from './store/client';
 import clientContext from './contexts/client';
 import { credentialsKey } from './constants/local-storage';
@@ -184,10 +185,11 @@ const Ellipsis = styled.div`
 interface SelectableRowP {
 	selected: boolean;
 	onSelectionChange: (selected: boolean) => void;
+	onEnter: () => void;
 }
 
 
-const SelectableRow: React.FunctionComponent<SelectableRowP> = ({ selected, onSelectionChange, children }) => {
+const SelectableRow: React.FunctionComponent<SelectableRowP> = ({ selected, onSelectionChange, onEnter, children }) => {
 	const [over, setOver] = useState(false);
 	const handleSelection = () => onSelectionChange(!selected);
 
@@ -196,6 +198,7 @@ const SelectableRow: React.FunctionComponent<SelectableRowP> = ({ selected, onSe
 			selected={over || selected}
 			onMouseOver={() => setOver(true)}
 			onMouseOut={() => setOver(false)}
+			onDoubleClick={onEnter}
 			onClick={handleSelection}
 		>
 			{children}
@@ -207,12 +210,12 @@ const appSelector = (state: ApplicationState) => ([
 	state.client.init,
 	state.objects.listObjects,
 	state.browser.selection,
+	state.browser.currentPath,
 ] as const);
 
 const App: React.FunctionComponent = ({ children }) => {
-	const [init, listObjects, selection] = useSelector(appSelector);
+	const [init, listObjects, selection, currentPath] = useSelector(appSelector);
 	const dispatch = useDispatch();
-	// const [selection, setSelection] = useState<string[]>([]);
 
 	// // TODO: have a look how to optimise this
 	const reloadConfig = (region: string, accessKeyId: string, secretAccessKey: string, bucket: string) => {
@@ -245,6 +248,12 @@ const App: React.FunctionComponent = ({ children }) => {
 					<span>{` (${selectionCount} file${selectionCount > 1 ? 's': ''} selected)`}</span>
 				)}
 			</SectionName>
+			{currentPath.response && (
+				<div>
+					<div>{'Current path: '}</div>
+					<div>{currentPath.response}</div>
+				</div>
+			)}
 			<CardTable>
 				<Table>
 					<thead>
@@ -280,19 +289,22 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>30/12/1990</td>
 							<td>481.09MB</td>
 						</tr> */}
-						{listObjects.response && listObjects.response.map(i => (
+						{listObjects.response && listObjects.response
+							.filter(i => !currentPath.response || (i.Key !== currentPath.response && i.Key.startsWith(currentPath.response)))
+							.map(i => (
 							<SelectableRow
 								selected={selection.response && selection.response.includes(i.Key)}
 								onSelectionChange={on => {
-									dispatch(actionSelectionUpdate.request({type: on ? 'add' : 'remove', keys: [i.Key]}));
+									dispatch(actionSelectionUpdate.request({ type: on ? 'add' : 'remove', keys: [i.Key] }));
 								}}
+								onEnter={() => dispatch(actionSetPath.request({ path: i.Key }))}
 							>
 								<td>
 									<InnerCellAligned>
 										<FileTypeIconWrap>
 											<FontAwesomeIcon icon={faQuestion} />
 										</FileTypeIconWrap>
-										<Ellipsis>{i.Key.substr(0, 20)}</Ellipsis>
+										<Ellipsis>{i.Key.substr(-20)}</Ellipsis>
 									</InnerCellAligned>
 								</td>
 								<td>-</td>
@@ -307,7 +319,7 @@ const App: React.FunctionComponent = ({ children }) => {
 			</CardTable>
 			<Reset />
 			{/* <Upload /> */}
-			<Browser />
+			{/* <Browser /> */}
 			{children}
 		</MainContainer>
 	);

@@ -42,6 +42,7 @@ function* worker({ payload }: PayloadAction<string, SelectionUpdateRequest>) {
 
 		yield put(actionSelectionUpdate.success(selection));
 	} else {
+		// TODO: dis not great. should find a better solution for it
 		listObjects.response.forEach(o => {
 			payload.keys.forEach(k => {
 				if (o.Key.startsWith(k))
