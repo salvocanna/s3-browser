@@ -235,9 +235,16 @@ const App: React.FunctionComponent = ({ children }) => {
 		);
 	}
 
+	const selectionCount = (selection.response && selection.response.length) || 0;
+
 	return (
 		<MainContainer>
-			<SectionName>{'My Files'}</SectionName>
+			<SectionName>
+				{'My Files'}
+				{selectionCount > 0 && (
+					<span>{` (${selectionCount} file${selectionCount > 1 ? 's': ''} selected)`}</span>
+				)}
+			</SectionName>
 			<CardTable>
 				<Table>
 					<thead>
