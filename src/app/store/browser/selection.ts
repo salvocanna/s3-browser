@@ -5,6 +5,7 @@ import { createAsyncReducer } from '@lib/redux/async-reducer';
 import { PayloadAction, createAction, PayloadMetaAction } from 'typesafe-actions';
 import { ApplicationState } from '..';
 import { AsyncState } from '@lib/redux/state';
+import { Object } from 'aws-sdk/clients/s3';
 
 export const actionType = {
 	SELECTION_UPDATE: '@store/browser/SELECTION_UPDATE',
@@ -23,12 +24,13 @@ export function* watcher() {
 	yield takeEvery(actionType.SELECTION_UPDATE, worker);
 }
 
-// this will, in future, scan the sub-keys if needed
+// this will, in future, scan async the sub-keys if needed
 function* worker({ payload }: PayloadAction<string, SelectionUpdateRequest>) {
 	const previousSelection: AsyncState<string[]> = yield select((state: ApplicationState) => state.browser.selection);
+	const listObjects: AsyncState<Object[]> = yield select((state: ApplicationState) => state.objects.listObjects);
 
 	// we're not quite there yet, boy
-	if (previousSelection.loading)
+	if (previousSelection.loading || listObjects.loading)
 		return;
 
 	let selection = previousSelection.response || [];
@@ -40,7 +42,14 @@ function* worker({ payload }: PayloadAction<string, SelectionUpdateRequest>) {
 
 		yield put(actionSelectionUpdate.success(selection));
 	} else {
-		selection = Array.from(new Set([...payload.keys, ...selection]));
+		listObjects.response.forEach(o => {
+			payload.keys.forEach(k => {
+				if (o.Key.startsWith(k))
+					selection.push(o.Key);
+			});
+		})
+
+		selection = Array.from(new Set([...selection]));
 
 		yield put(actionSelectionUpdate.success(selection));
 	}
