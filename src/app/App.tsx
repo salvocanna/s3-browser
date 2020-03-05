@@ -313,8 +313,6 @@ const App: React.FunctionComponent = ({ children }) => {
 								</SelectableRow>
 							)
 						)}
-
-						{/* <SelectableRow selected /> */}
 					</tbody>
 				</Table>
 			</CardTable>
