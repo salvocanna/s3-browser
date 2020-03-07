@@ -13,7 +13,7 @@ export interface BrowserState {
 
 export const initialState: BrowserState = {
 	selection: { ...initialAsyncState },
-	currentPath: { ...initialAsyncState },
+	currentPath: { ...initialAsyncState, response: '' },
 }
 
 export const browserReducers = combineReducers({

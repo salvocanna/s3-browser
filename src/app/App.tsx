@@ -19,6 +19,7 @@ import { credentialsKey } from './constants/local-storage';
 import styled from 'styled-components';
 import toasterContext from './contexts/toaster';
 import { useDispatch } from 'react-redux';
+import useFolderView from './hooks/use-folder-view';
 
 const MainContainer = styled.div`
 	background: #F3F6F9;
@@ -216,6 +217,7 @@ const appSelector = (state: ApplicationState) => ([
 const App: React.FunctionComponent = ({ children }) => {
 	const [init, listObjects, selection, currentPath] = useSelector(appSelector);
 	const dispatch = useDispatch();
+	const { loading, objects } = useFolderView(listObjects, currentPath);
 
 	// // TODO: have a look how to optimise this
 	const reloadConfig = (region: string, accessKeyId: string, secretAccessKey: string, bucket: string) => {
@@ -237,6 +239,9 @@ const App: React.FunctionComponent = ({ children }) => {
 			/>
 		);
 	}
+
+	// if (loading)
+	// 	return null;
 
 	const selectionCount = (selection.response && selection.response.length) || 0;
 
@@ -290,8 +295,7 @@ const App: React.FunctionComponent = ({ children }) => {
 							<td>30/12/1990</td>
 							<td>481.09MB</td>
 						</tr> */}
-						{listObjects.response && listObjects.response
-							.filter(i => !currentPath.response || (i.Key !== currentPath.response && i.Key.startsWith(currentPath.response)))
+						{objects
 							.map(i => (
 								<SelectableRow
 									key={i.Key}
